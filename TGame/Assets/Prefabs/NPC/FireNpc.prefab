@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6073150714606118457}
   m_Layer: 0
   m_Name: FireNpc
-  m_TagString: Untagged
+  m_TagString: FireNpc
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -164,3 +164,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01e4a23e5e5fe7646b06ac7ee65323c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: -20
+  jumpGround:
+    serializedVersion: 2
+    m_Bits: 64
+  convoWhenHasKey: []
+  convoWhenHasKeyNot: []
+  panelText: {fileID: 0}
+  player: {fileID: 0}

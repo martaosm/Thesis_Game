@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using NPC;
+using Scene;
 using UnityEngine;
 
 namespace Player
@@ -10,11 +12,13 @@ namespace Player
         [Header("For WallSliding")] 
         [SerializeField] private float wallSlideSpeed = 0;
         [SerializeField] private LayerMask wallLayer;
+        [SerializeField] private LayerMask fireNpcLayer;
         [SerializeField] private Transform wallCheckPoint;
         [SerializeField] private Vector2 wallCheckSize;
         private bool _isTouchingWall;
         private bool _isWallSliding;
-
+        
+        private bool _isBeingAttacked;
         private PlayerInfo _playerInfo;
         private Rigidbody2D _rb;
         private SpriteRenderer _player;
@@ -27,10 +31,21 @@ namespace Player
         [SerializeField] private float _jumpForce = 10f;
         [SerializeField] private float _speed = 5f;
         [SerializeField] private LayerMask jumpGround;
+        //[SerializeField] private GameObject fireNpc;
         private static readonly int State = Animator.StringToHash("state");
         private static readonly int Attack = Animator.StringToHash("Attack");
+        private static readonly int Ladder = Animator.StringToHash("Ladder");
 
-        private enum MovementState { Idle, Run, Jump, Fall, WallSlide};
+        private enum MovementState
+        {
+            Idle,
+            Run,
+            Jump,
+            Fall,
+            WallSlide,
+            HurtFromFire
+        };
+        
         private void Start()
         {
             _rb = GetComponent<Rigidbody2D>();
@@ -39,19 +54,22 @@ namespace Player
             _collider = GetComponent<BoxCollider2D>();
             _playerInfo = GetComponent<PlayerInfo>();
             _sceneController = FindObjectOfType<SceneController>();
+            
         }
 
         private void Update()
         {
-            if (_canMove && _sceneController.GetInputEnabled())
+            if (_canMove && _playerInfo.InputEnabled)
             {
                 _dirX = Input.GetAxisRaw("Horizontal");
                 _rb.velocity = new Vector2(_dirX * _speed, _rb.velocity.y);
-                if (Input.GetButtonDown("Jump") && IsGrounded() && _sceneController.GetInputEnabled())
+                if (Input.GetButtonDown("Jump") && IsGrounded() && _playerInfo.InputEnabled)
                 {
                     _rb.velocity = new Vector2(_rb.velocity.x, _jumpForce);
                 }
             }
+
+            IsAttackedByFire();
             UpdateAnimation();
             PlayerAttack(IsGrounded());
             WallSlide();
@@ -99,13 +117,18 @@ namespace Player
             {
                 _state = MovementState.WallSlide;
             }
+
+            if (_isBeingAttacked)
+            {
+                StartCoroutine(PlayerHurtFromFire());
+            }
             
             _animation.SetInteger(State, (int)_state);
         }
         
         private void PlayerAttack(bool grounded)
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0) && grounded && _sceneController.GetInputEnabled())
+            if (Input.GetKeyDown(KeyCode.Mouse0) && grounded && _playerInfo.InputEnabled)
             {
                 StartCoroutine(PlayerExecuteAttack());
                 _rb.velocity = new Vector2(0, _rb.velocity.y);
@@ -154,6 +177,26 @@ namespace Player
         {
             Gizmos.color=Color.blue;
             Gizmos.DrawCube(wallCheckPoint.position, wallCheckSize);
+        }
+
+        private bool IsAttackedByFire()
+        {
+            if (Physics2D.OverlapBox(wallCheckPoint.position, wallCheckSize, 0, fireNpcLayer))
+            {
+                _isBeingAttacked = true;
+            }
+            return _isBeingAttacked;
+        }
+        
+        IEnumerator PlayerHurtFromFire()
+        {
+            _state = MovementState.HurtFromFire;
+            _animation.SetInteger(State, (int)_state);
+            yield return new WaitForSeconds(2f);
+            _state = MovementState.Idle;
+            _animation.SetInteger(State, (int)_state);
+            _isBeingAttacked = false;
+            _playerInfo.InputEnabled = true;
         }
     }
 }

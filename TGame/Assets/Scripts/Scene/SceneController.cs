@@ -1,61 +1,62 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneController : MonoBehaviour
+namespace Scene
 {
-    private bool InputEnabled { get; set; } = true;
-    private bool _nextChamber;
-    private float _dirX;
-    private CameraController _cameraController;
-    [SerializeField] private GameObject player;
-    [SerializeField] private GameObject checkpoint;
-
-    private void OnEnable()
+    public class SceneController : MonoBehaviour
     {
-        InputEnabled = true;
-    }
+        private bool _nextChamber;
+        private float _dirX;
+        private CameraController _cameraController;
+        [SerializeField] private GameObject player;
+        [SerializeField] private GameObject checkpoint;
 
-    private void OnDisable()
-    {
-        InputEnabled = false;
-    }
-
-    private void Start()
-    {
-        _cameraController = FindObjectOfType<CameraController>();
-    }
-
-    private void Update()
-    {
-        if (_nextChamber)
+    
+        private void Start()
         {
-            player.GetComponent<Rigidbody2D>().velocity = new Vector2(10, player.GetComponent<Rigidbody2D>().velocity.y);
+            _cameraController = FindObjectOfType<CameraController>();
         }
-    }
 
-    private void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.gameObject.GetComponent<PlayerInfo>())
+        private void Update()
         {
-            InputEnabled = false;
-            _dirX = Input.GetAxisRaw("Horizontal");
-            _cameraController.enabled = false;
-            _nextChamber = true;
-            StartCoroutine(MoveToNextChamber());
+            if (_nextChamber)
+            {
+                player.GetComponent<Rigidbody2D>().velocity =
+                    new Vector2(_dirX * 10, player.GetComponent<Rigidbody2D>().velocity.y);
+            }
         }
-    }
 
-    IEnumerator MoveToNextChamber()
-    {
-        yield return new WaitForSeconds(3f);
-        SceneManager.LoadScene("Chapter1");
-    }
-    public bool GetInputEnabled()
-    {
-        return InputEnabled;
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            if (col.gameObject.GetComponent<PlayerInfo>())
+            {
+                player.GetComponent<PlayerInfo>().InputEnabled = false;
+                if (Input.GetAxisRaw("Horizontal")>0)
+                {
+                    _dirX = 1;
+                }else if (Input.GetAxisRaw("Horizontal") < 0)
+                {
+                    _dirX = -1;
+                }
+                //_dirX = Input.GetAxisRaw("Horizontal");
+                _cameraController.enabled = false;
+                _nextChamber = true;
+                StartCoroutine(MoveToNextChamber());
+            }
+        }
+
+        IEnumerator MoveToNextChamber()
+        {
+            yield return new WaitForSeconds(3f);
+            if (_dirX > 0)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            }else if (_dirX < 0)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+            }
+        }
     }
 }

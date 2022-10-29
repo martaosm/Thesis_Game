@@ -11,6 +11,12 @@ namespace Scene
         private bool _usedKey;
         private PlayerInfo _playerInfo;
         private FireNpcController _fireNpc;
+        private bool _doorOpened;
+        public bool DoorOpened
+        {
+            get => _doorOpened;
+            set => _doorOpened = value;
+        }
         [SerializeField] private float speed;
         [SerializeField] private GameObject cellDoor;
         [SerializeField] private GameObject cellWall;
@@ -31,6 +37,8 @@ namespace Scene
                 cellDoor.transform.position = Vector2.MoveTowards(transform.position, cellWall.transform.position, speed);
                 cellDoor.GetComponent<Collider2D>().enabled = false;
                 _usedKey = false;
+                _doorOpened = true;
+                _playerInfo.InputEnabled = false;
             }
         }
 

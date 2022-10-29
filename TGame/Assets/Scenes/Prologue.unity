@@ -31305,6 +31305,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6222014982782767907, guid: 838852caf61b7bd45b13e22d6bbcc2e8, type: 3}
+      propertyPath: fireNpc
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6222014982782767933, guid: 838852caf61b7bd45b13e22d6bbcc2e8, type: 3}
       propertyPath: m_Name
       value: Player
@@ -31319,7 +31323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6222014982782767935, guid: 838852caf61b7bd45b13e22d6bbcc2e8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.8
+      value: 2.3
       objectReference: {fileID: 0}
     - target: {fileID: 6222014982782767935, guid: 838852caf61b7bd45b13e22d6bbcc2e8, type: 3}
       propertyPath: m_LocalPosition.z

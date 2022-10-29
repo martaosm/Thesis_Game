@@ -200,6 +200,9 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 128
+  fireNpcLayer:
+    serializedVersion: 2
+    m_Bits: 0
   wallCheckPoint: {fileID: 6222014981927306042}
   wallCheckSize: {x: 2, y: 1}
   _jumpForce: 17
@@ -207,6 +210,7 @@ MonoBehaviour:
   jumpGround:
     serializedVersion: 2
     m_Bits: 64
+  fireNpc: {fileID: 0}
 --- !u!114 &6222014982782767908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,3 +223,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb4d1332a174be340a161c1065206072, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hasKey: 1

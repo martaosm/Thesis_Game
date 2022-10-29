@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Key
+  - Ladder
+  - FireNpc
+  - Mark
   layers:
   - Default
   - TransparentFX
@@ -15,7 +18,7 @@ TagManager:
   - Ground
   - Walls
   - Player
-  - 
+  - FireNpcLayer
   - 
   - 
   - 

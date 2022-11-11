@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Player;
 using Scene;
 using TMPro;
@@ -9,7 +10,12 @@ namespace NPC
 {
     public class FireNpcController : MonoBehaviour
     {
-
+        private bool _isFree = false;
+        public bool IsFree
+        {
+            get => _isFree;
+            set => _isFree = value;
+        }
         private int _encountersCount;
         public int EncountersCount
         {
@@ -109,17 +115,34 @@ namespace NPC
         private void OnEnable()
         {
             _encountersCount = PlayerPrefs.GetInt("FireNpcEncounters");
+            _isFree = PlayerPrefs.GetInt("IsFree") == 1 ? true : false;
         }
 
         private void OnDisable()
         {
             PlayerPrefs.SetInt("FireNpcEncounters", _encountersCount);
+            PlayerPrefs.SetInt("IsFree", _isFree ? 1 : 0);
         }
         
         private bool IsGrounded()
         {
             return Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, Vector2.down, .1f, jumpGround);
         }
-        
+
+        /*private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.gameObject.CompareTag("Ramp"))
+            {
+                Destroy(gameObject);
+            }
+        }*/
+
+        private void OnCollisionEnter2D(Collision2D col)
+        {
+            if (col.gameObject.CompareTag("Ramp"))
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 }

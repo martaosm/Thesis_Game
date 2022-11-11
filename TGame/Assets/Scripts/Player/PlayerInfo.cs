@@ -6,6 +6,7 @@ namespace Player
 {
     public class PlayerInfo : MonoBehaviour
     {
+        public float _health = 100;
         private bool _isAttacking;
         public bool _hasKey;
         public bool _hasMark;

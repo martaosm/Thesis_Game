@@ -8,6 +8,8 @@ TagManager:
   - Ladder
   - FireNpc
   - Mark
+  - enemyWeapon
+  - Ramp
   layers:
   - Default
   - TransparentFX
@@ -19,8 +21,8 @@ TagManager:
   - Walls
   - Player
   - FireNpcLayer
-  - 
-  - 
+  - Enemy
+  - EnemyDemonGuard
   - 
   - 
   - 

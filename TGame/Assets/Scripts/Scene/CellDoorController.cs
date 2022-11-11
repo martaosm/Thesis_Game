@@ -60,6 +60,7 @@ namespace Scene
             {
                 _usedKey = true;
                 _playerInfo.HasKey = false;
+                _fireNpc.IsFree = true;
                 GetComponent<Collider2D>().enabled = false;
                 instructionText.gameObject.SetActive(false);
             }

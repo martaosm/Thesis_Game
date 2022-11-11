@@ -21,6 +21,9 @@ namespace Menu
             SceneManager.LoadScene("Prologue");
             PlayerPrefs.SetInt("FireNpcEncounters", 0);
             PlayerPrefs.SetInt("hasKey", 0);
+            PlayerPrefs.SetInt("IsFree", 0);
+            PlayerPrefs.SetInt("GuardEncounters", 0);
+            PlayerPrefs.SetInt("DemonGuardDone", 0);
         }
 
         private void QuitGame()

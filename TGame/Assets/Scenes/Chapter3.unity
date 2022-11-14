@@ -9594,11 +9594,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6222014982782767905, guid: 838852caf61b7bd45b13e22d6bbcc2e8, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.x
-      value: 0.5
+      value: 0.4386878
       objectReference: {fileID: 0}
     - target: {fileID: 6222014982782767905, guid: 838852caf61b7bd45b13e22d6bbcc2e8, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 4.3125
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6222014982782767907, guid: 838852caf61b7bd45b13e22d6bbcc2e8, type: 3}
+      propertyPath: enemyCandyGiver.m_Bits
+      value: 4096
       objectReference: {fileID: 0}
     - target: {fileID: 6222014982782767933, guid: 838852caf61b7bd45b13e22d6bbcc2e8, type: 3}
       propertyPath: m_Name
@@ -9679,6 +9683,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1192287082}
     - target: {fileID: 8574390157568650579, guid: fd19892cb34a9b4418a212a9629e8815, type: 3}
+      propertyPath: trigger
+      value: 
+      objectReference: {fileID: 435235831}
+    - target: {fileID: 8574390157568650579, guid: fd19892cb34a9b4418a212a9629e8815, type: 3}
       propertyPath: collider
       value: 
       objectReference: {fileID: 435235836}
@@ -9738,13 +9746,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8574390157568650581, guid: fd19892cb34a9b4418a212a9629e8815, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8574390157568650581, guid: fd19892cb34a9b4418a212a9629e8815, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8574390157568650581, guid: fd19892cb34a9b4418a212a9629e8815, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8574390157568650583, guid: fd19892cb34a9b4418a212a9629e8815, type: 3}
       propertyPath: m_Name
       value: CandyGiver
       objectReference: {fileID: 0}
     - target: {fileID: 8574390157568650583, guid: fd19892cb34a9b4418a212a9629e8815, type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd19892cb34a9b4418a212a9629e8815, type: 3}

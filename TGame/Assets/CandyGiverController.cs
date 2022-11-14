@@ -1,10 +1,19 @@
 using System;
+using System.Collections;
 using Player;
 using TMPro;
 using UnityEngine;
 
 public class CandyGiverController : MonoBehaviour
 {
+    private float _life = 20f;
+    public float Life
+    {
+        get => _life;
+        set => _life = value;
+    }
+
+    private bool _candyGiverDealt;
     private Animator _animator;
     private PlayerInfo _playerInfo;
     private bool _isPlayerAnEnemy;
@@ -16,7 +25,11 @@ public class CandyGiverController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI panelText;
     [SerializeField] private TextMeshProUGUI instructions;
     [SerializeField] private Collider2D collider;
+    [SerializeField] private Collider2D trigger;
     [SerializeField] private GameObject closedChamber;
+    private static readonly int Attack = Animator.StringToHash("Attack");
+    private static readonly int Death = Animator.StringToHash("Death");
+    private static readonly int Death0 = Animator.StringToHash("Death0");
 
     private void Start()
     {
@@ -26,6 +39,16 @@ public class CandyGiverController : MonoBehaviour
 
     private void Update()
     {
+        if (_playerInfo._health <= 0)
+        {
+            _isPlayerAnEnemy = false;
+        }
+
+        if (_life <= 0)
+        {
+            StartCoroutine(CandyGiverDeath());
+        }
+        
         if (player.transform.position.x > gameObject.transform.position.x)
         {
             gameObject.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
@@ -66,6 +89,15 @@ public class CandyGiverController : MonoBehaviour
         }
     }
     
+    IEnumerator CandyGiverDeath()
+    {
+        _life++;
+        _animator.SetBool(Death0, true);
+        _candyGiverDealt = true;
+        yield return new WaitForSeconds(1.5f);
+        gameObject.SetActive(false);
+    }
+    
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.GetComponent<PlayerInfo>())
@@ -84,17 +116,22 @@ public class CandyGiverController : MonoBehaviour
             if (_answer == "no")
             {
                 collider.enabled = true;
-                //panel.SetActive(false);
-                //instructions.gameObject.SetActive(false);
-                /*if (_isPlayerAnEnemy)
+                trigger.enabled = false;
+                panel.SetActive(false);
+                instructions.gameObject.SetActive(false);
+                if (_isPlayerAnEnemy)
                 {
-                    gameObject.layer = 11;
-                    if (Physics2D.OverlapBoxAll(triggerArea.position, triggerAreaSize, playerLayer).Length > 0 &&
-                        _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                    gameObject.layer = 12;
+                    if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                     {
                         _animator.SetTrigger(Attack);
                     }
-                }*/
+                }
+            }
+
+            if (_answer == "yes")
+            {
+                StartCoroutine(PlayerTakesCandy());
             }
         }
     }
@@ -105,5 +142,34 @@ public class CandyGiverController : MonoBehaviour
             panel.SetActive(false);
             instructions.gameObject.SetActive(false);
         }
+    }
+    
+    IEnumerator PlayerTakesCandy()
+    {
+        instructions.gameObject.SetActive(false);
+        _playerInfo._health += 50;
+        panelText.text =
+            "You like it? That kind of candy will increase your health by 50 HP. Thank you for tasting it! Now I gotta go, bye!";
+        yield return new WaitForSeconds(4f);
+        //_life++;
+        _animator.SetBool(Death0, true);
+        panel.SetActive(false);
+        _candyGiverDealt = true;
+        yield return new WaitForSeconds(1.5f);
+        gameObject.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        _candyGiverDealt = PlayerPrefs.GetInt("CandyGiverDealt") == 1;
+        if (_candyGiverDealt)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    private void OnDisable()
+    {
+        PlayerPrefs.SetInt("CandyGiverDealt", _candyGiverDealt ? 1 : 0);
     }
 }

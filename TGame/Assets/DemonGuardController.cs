@@ -48,7 +48,7 @@ public class DemonGuardController : MonoBehaviour
 
     private void Update()
     {
-        if (_playerInfo._health == 0)
+        if (_playerInfo._health <= 0)
         {
             _isPlayerAnEnemy = false;
         }

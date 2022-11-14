@@ -40,11 +40,13 @@ namespace Player
         [SerializeField] private float attackRange;
         [SerializeField] private LayerMask enemyLayer;
         [SerializeField] private LayerMask enemyDemonGuard;
+        [SerializeField] private LayerMask enemyCandyGiver;
         private static readonly int State = Animator.StringToHash("state");
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int Hit = Animator.StringToHash("Hit");
         private static readonly int Death = Animator.StringToHash("Death");
         private static readonly int HurtFromFire = Animator.StringToHash("HurtFromFire");
+        private static readonly int Crouch = Animator.StringToHash("Crouch");
 
         private enum MovementState
         {
@@ -71,6 +73,11 @@ namespace Player
         {
             if (_canMove && _playerInfo.InputEnabled)
             {
+                if (_isPlayerCrouching)
+                {
+                    _rb.velocity = new Vector2(0, 0);
+                }
+                
                 if (!_isPlayerCrouching)
                 {
                     _dirX = Input.GetAxisRaw("Horizontal");
@@ -94,6 +101,7 @@ namespace Player
             if (_playerInfo._health == 0)
             {
                 print("you ded");
+                //_collider.enabled = false;
                 _animation.Play("PlayerDeath");
                 StartCoroutine(ChangeToGameOverScene());
                 _playerInfo._health = -1;
@@ -152,12 +160,14 @@ namespace Player
 
             if (Input.GetKey(KeyCode.C))
             {
+                _animation.SetBool(Crouch, true);
                 _state = MovementState.Crouch;
                 _isPlayerCrouching = true;
             }
 
             if (Input.GetKeyUp(KeyCode.C))
             {
+                _animation.SetBool(Crouch, false);
                 _isPlayerCrouching = false;
             }
 
@@ -211,12 +221,12 @@ namespace Player
             foreach (var hit in hitGuard)
             {
                 hit.gameObject.GetComponent<DemonGuardController>().Life -= 5;
-                print(hit.gameObject.GetComponent<DemonGuardController>().Life);
+                print(hit.gameObject.GetComponent<DemonGuardController>().Life);//remove
                 if (hit.gameObject.GetComponent<DemonGuardController>().Life <= 10)
                 {
                     //hit.gameObject.GetComponent<Animator>().SetTrigger(Death);
                     //StartCoroutine(hit.gameObject.GetComponent<EnemyController>().DeadBodyDestroy());
-                    print("ok");
+                    //print("ok");
                     break;
                 }
                 hit.gameObject.GetComponent<Animator>().SetTrigger("Hurt");
@@ -224,6 +234,22 @@ namespace Player
             
             //candy giver
             //TODO: fight that creep
+            Collider2D[] hitCandy = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyCandyGiver);
+            foreach (var hit in hitCandy)
+            {
+                hit.gameObject.GetComponent<CandyGiverController>().Life -= 5;
+                print(hit.gameObject.GetComponent<CandyGiverController>().Life);//remove
+                if (hit.gameObject.GetComponent<CandyGiverController>().Life <= 0)
+                {
+                    //hit.gameObject.GetComponent<Animator>().SetTrigger(Death);
+                    //StartCoroutine(hit.gameObject.GetComponent<EnemyController>().DeadBodyDestroy());
+                    print("ok");//6A3434 //FFFFFF
+                    break;
+                }
+                hit.gameObject.GetComponent<Animator>().SetTrigger("Hurt");
+                gameObject.GetComponent<SpriteRenderer>().color = new Color(106f, 52f, 52f, 255); 
+                gameObject.GetComponent<SpriteRenderer>().color = new Color(255f, 255f, 255f, 255); 
+            }
             
             yield return new WaitForSeconds(1f);
             _canMove = true;
@@ -289,5 +315,7 @@ namespace Player
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(attackPoint.position, attackRange);
         }
+        
+        
     }
 }

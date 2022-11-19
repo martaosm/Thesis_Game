@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using Player;
 using Scene;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace NPC
 {
@@ -28,12 +30,17 @@ namespace NPC
         private SpriteRenderer _fireNpc;
         private Rigidbody2D _rb;
         private CellDoorController _cellDoorController;
+        private Transform _attackPoint;
         [SerializeField] private float speed;
         [SerializeField] private LayerMask jumpGround;
         [SerializeField] private List<string> convoWhenHasKey = new List<string>();
         [SerializeField] private List<string> convoWhenHasKeyNot = new List<string>();
         [SerializeField] private TextMeshProUGUI panelText;
         [SerializeField] private GameObject player;
+        [SerializeField] private Transform leftPoint;
+        [SerializeField] private Transform rightPoint;
+        [SerializeField] private Transform centerPoint;
+        [SerializeField] private GameObject triggerArea;
 
         private void Start()
         {
@@ -41,24 +48,39 @@ namespace NPC
             _collider = GetComponent<BoxCollider2D>();
             _animation = GetComponent<Animator>();
             _fireNpc = GetComponent<SpriteRenderer>();
-            _rb = GetComponent<Rigidbody2D>();
+            //_rb = GetComponent<Rigidbody2D>();
             _cellDoorController = FindObjectOfType<CellDoorController>();
         }
 
         private void Update()
         {
-            Physics2D.IgnoreCollision(_collider, player.GetComponent<BoxCollider2D>());
-            if (_cellDoorController.DoorOpened)
+            if (SceneManager.GetActiveScene().name == "Chapter1")
             {
-                _rb.velocity = new Vector2(speed, _rb.velocity.y);
+                Physics2D.IgnoreCollision(_collider, player.GetComponent<BoxCollider2D>());
+                if (_cellDoorController.DoorOpened)
+                {
+                    _animation.SetBool("Attack", true);
+                    //_rb.velocity = new Vector2(speed, _rb.velocity.y);
+                }
             }
-            UpdateAnimation();
+
+            if (player.transform.position.x > gameObject.transform.position.x)
+            {
+                gameObject.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
+                //_attackPoint = rightPoint;
+            }
+            else if (player.transform.position.x < gameObject.transform.position.x)
+            {
+                gameObject.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
+                //_attackPoint = leftPoint;
+            }
+                //UpdateAnimation();
         }
 
         private void UpdateAnimation()
         {
             if (_rb.velocity.magnitude < 0f )
-            {
+            { 
                 _fireNpc.flipX = false;
             }
             else if (_rb.velocity.magnitude > 0f )
@@ -67,12 +89,12 @@ namespace NPC
             }
             if (_rb.velocity.magnitude < 0f && IsGrounded())
             {
-                _animation.Play("FireWalk");
+                //_animation.Play("FireWalk");
                 _fireNpc.flipX = false;
             }
             else if (_rb.velocity.magnitude > 0f && IsGrounded())
             {
-                _animation.Play("FireWalk");
+                //_animation.Play("FireWalk");
                 _fireNpc.flipX = true;
             }
             else if(_rb.velocity.magnitude==0f && IsGrounded() )
@@ -116,12 +138,14 @@ namespace NPC
         {
             _encountersCount = PlayerPrefs.GetInt("FireNpcEncounters");
             _isFree = PlayerPrefs.GetInt("IsFree") == 1 ? true : false;
+            TriggerAreaController.OnAttack += FireAttack;
         }
 
         private void OnDisable()
         {
             PlayerPrefs.SetInt("FireNpcEncounters", _encountersCount);
             PlayerPrefs.SetInt("IsFree", _isFree ? 1 : 0);
+            TriggerAreaController.OnAttack -= FireAttack;
         }
         
         private bool IsGrounded()
@@ -141,8 +165,57 @@ namespace NPC
         {
             if (col.gameObject.CompareTag("Ramp"))
             {
+                _animation.SetBool("Attack", false);
                 Destroy(gameObject);
             }
+
+            if (col.gameObject.GetComponent<PlayerInfo>())
+            {
+                if (_animation.GetBool("Attack") == true)
+                {
+                    _animation.SetBool("Attack", false);
+                    gameObject.tag = "FireNpc";
+                }
+            }
         }
+
+        /*private void OnTriggerEnter2D(Collider2D col)
+        {
+            if (col.GetComponent<PlayerInfo>())
+            {
+                //_animation.SetBool("Attack", true);
+                gameObject.tag = "enemyWeapon";
+                //StartCoroutine(FireAttack());
+                //transform.position = Vector2.MoveTowards(transform.position, col.gameObject.transform.position, 7 * Time.deltaTime);
+                /*gameObject.transform.position = Vector2.MoveTowards(gameObject.transform.position,
+                    col.gameObject.transform.position, 10 * Time.deltaTime);#1#
+            }
+        }*/
+
+        /*private void OnTriggerStay2D(Collider2D other)
+        {
+            if (other.GetComponent<PlayerInfo>())
+            {
+                Debug.Log("hahaha1");
+                //_animation.SetBool("Attack", true);
+                //gameObject.tag = "enemyWeapon";
+                //StartCoroutine(FireAttack());
+                //transform.position = Vector2.MoveTowards(transform.position, col.gameObject.transform.position, 7 * Time.deltaTime);
+                /*gameObject.transform.position = Vector2.MoveTowards(gameObject.transform.position,
+                    col.gameObject.transform.position, 10 * Time.deltaTime);#1#
+            }
+        }*/
+
+         private void FireAttack()
+         {
+             _attackPoint = leftPoint;
+            Debug.Log(_attackPoint);
+            gameObject.tag = "enemyWeapon";
+            transform.position = Vector2.MoveTowards(transform.position, _attackPoint.localPosition, 7 * Time.deltaTime);
+            //yield return new WaitForSeconds(1f);
+            //_attackPoint = centerPoint;
+            //transform.position = Vector2.MoveTowards(transform.position, _attackPoint.position, 7 * Time.deltaTime);
+        }
+        
     }
 }

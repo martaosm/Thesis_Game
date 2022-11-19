@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Player;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class HiddenChamberDiscovered : MonoBehaviour

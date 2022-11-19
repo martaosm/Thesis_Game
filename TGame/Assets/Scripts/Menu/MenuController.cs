@@ -24,6 +24,7 @@ namespace Menu
             PlayerPrefs.SetInt("IsFree", 0);
             PlayerPrefs.SetInt("GuardEncounters", 0);
             PlayerPrefs.SetInt("DemonGuardDone", 0);
+            PlayerPrefs.SetInt("CandyGiverDealt", 0);
         }
 
         private void QuitGame()

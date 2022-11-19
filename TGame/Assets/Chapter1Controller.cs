@@ -17,8 +17,9 @@ public class Chapter1Controller : MonoBehaviour
         if (_isFireFree)
         {
             FindObjectOfType<FireNpcController>().gameObject.SetActive(false);
-            cellDoor.transform.position = Vector2.MoveTowards(transform.position, cellWall.transform.position, speed);
+            cellDoor.GetComponent<Animator>().SetBool("CellDoorOpened", true);//transform.position = Vector2.MoveTowards(transform.position, cellWall.transform.position, speed);
             FindObjectOfType<CellDoorController>().gameObject.GetComponent<Collider2D>().enabled = false;
+            cellDoor.GetComponent<Collider2D>().enabled = false;
         }
     }
     

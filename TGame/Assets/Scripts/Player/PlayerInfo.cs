@@ -58,12 +58,14 @@ namespace Player
         {
             _hasKey = PlayerPrefs.GetInt("hasKey") == 1;
             _hasMark = PlayerPrefs.GetInt("hasMark") == 1;
+            _health = PlayerPrefs.GetInt("PlayerHealth", (int)_health);
         }
 
         private void OnDisable()
         {
             PlayerPrefs.SetInt("hasKey", _hasKey ? 1 : 0);
             PlayerPrefs.SetInt("hasMark", _hasMark ? 1 : 0);
+            PlayerPrefs.SetInt("PlayerHealth", (int)_health);
         }
         
     }

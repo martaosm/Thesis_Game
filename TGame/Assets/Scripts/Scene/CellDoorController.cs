@@ -34,7 +34,8 @@ namespace Scene
         {
             if (_usedKey)
             {
-                cellDoor.transform.position = Vector2.MoveTowards(transform.position, cellWall.transform.position, speed);
+                cellDoor.GetComponent<Animator>().SetBool("CellDoorOpened", true);
+                //cellDoor.transform.position = Vector2.MoveTowards(transform.position, cellWall.transform.position, speed);
                 cellDoor.GetComponent<Collider2D>().enabled = false;
                 _usedKey = false;
                 _doorOpened = true;

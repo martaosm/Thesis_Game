@@ -20,7 +20,8 @@ public class DemonGuardController : MonoBehaviour
         get => _life;
         set => _life = value;
     }
-    
+
+    public bool _isGuardAnEnemy;
     private String _answer = "";
     private bool _isPlayerAnEnemy;
     private bool _answerGiven;
@@ -36,7 +37,7 @@ public class DemonGuardController : MonoBehaviour
     [SerializeField] private List<string> conversationLies;
     [SerializeField] private GameObject panel;
     [SerializeField] private TextMeshProUGUI panelText;
-    [SerializeField] private TextMeshProUGUI instructions;
+    [SerializeField] private TextMeshProUGUI instructions; 
     [SerializeField] private GameObject closedChamber;
     private static readonly int Attack = Animator.StringToHash("Attack");
 
@@ -58,11 +59,13 @@ public class DemonGuardController : MonoBehaviour
             {
                 case "yes":
                     _isPlayerAnEnemy = true;
+                    _isGuardAnEnemy = true;
                     closedChamber.SetActive(true);
                     StartCoroutine(ConversationAfterAnswer());
                     break;
                 case "no":
                     _isPlayerAnEnemy = false;
+                    _isGuardAnEnemy = false;
                     StartCoroutine(ConversationAfterAnswer());
                     //TODO: gain an ally and advance further 
                     break;
@@ -191,10 +194,13 @@ public class DemonGuardController : MonoBehaviour
     private void OnEnable()
     {
         _guardEncountersCount = PlayerPrefs.GetInt("GuardEncounters");
+        _isGuardAnEnemy = PlayerPrefs.GetInt("IsGuardAnEnemy") == 1;
     }
 
     private void OnDisable()
     {
         PlayerPrefs.SetInt("GuardEncounters", _guardEncountersCount);
+        PlayerPrefs.SetInt("IsGuardAnEnemy", _isGuardAnEnemy ? 1 : 0);
+
     }
 }

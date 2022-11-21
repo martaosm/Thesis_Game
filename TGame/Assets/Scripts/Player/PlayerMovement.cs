@@ -41,6 +41,7 @@ namespace Player
         [SerializeField] private LayerMask enemyLayer;
         [SerializeField] private LayerMask enemyDemonGuard;
         [SerializeField] private LayerMask enemyCandyGiver;
+        [SerializeField] private LayerMask kleptoNpc;
         private static readonly int State = Animator.StringToHash("state");
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int Hit = Animator.StringToHash("Hit");
@@ -82,10 +83,10 @@ namespace Player
                 {
                     _dirX = Input.GetAxisRaw("Horizontal");
                     _rb.velocity = new Vector2(_dirX * _speed, _rb.velocity.y);
-                }
+                //}
 
-                if (!_isPlayerCrouching)
-                {
+                //if (!_isPlayerCrouching)
+                //{
                     if (Input.GetButtonDown("Jump") && IsGrounded() && _playerInfo.InputEnabled)
                     {
                         _rb.velocity = new Vector2(_rb.velocity.x, _jumpForce);
@@ -171,15 +172,6 @@ namespace Player
                 _isPlayerCrouching = false;
             }
 
-            /*if (_state == MovementState.Crouch)
-            {
-                _collider.size = new Vector2(_collider.size.x, 1.388603f);
-            }
-            else
-            {
-                _collider.size = new Vector2(_collider.size.x, 2.022022f);
-            }*/
-            
             _animation.SetInteger(State, (int)_state);
         }
         
@@ -251,6 +243,21 @@ namespace Player
                 gameObject.GetComponent<SpriteRenderer>().color = new Color(255f, 255f, 255f, 255); 
             }
             
+            //klepto npc
+            Collider2D[] hitFire = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, kleptoNpc);
+            foreach (var hitEnemy in hitFire)
+            {
+                //hitEnemy.gameObject.GetComponent<EnemyController>().Life -= 2;
+                /*if (hitEnemy.gameObject.GetComponent<EnemyController>().Life <= 0)
+                {
+                    hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Death);
+                    StartCoroutine(hitEnemy.gameObject.GetComponent<EnemyController>().DeadBodyDestroy());
+                    break;
+                }*/
+                hitEnemy.gameObject.GetComponent<Animator>().SetTrigger("Death");
+            }
+            
+            
             yield return new WaitForSeconds(1f);
             _canMove = true;
             _playerInfo.SetIsAttacking(false);
@@ -303,8 +310,10 @@ namespace Player
         {
             if (col.gameObject.CompareTag("enemyWeapon"))
             {
+                _playerInfo.InputEnabled = false;
                 _playerInfo._health -= 10;
                 _animation.Play("PlayerHurt");
+                
             }
         }
 
@@ -314,6 +323,11 @@ namespace Player
             Gizmos.DrawCube(wallCheckPoint.position, wallCheckSize);
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(attackPoint.position, attackRange);
+        }
+
+        private void EnableInput()
+        {
+            _playerInfo.InputEnabled = true;
         }
         
         

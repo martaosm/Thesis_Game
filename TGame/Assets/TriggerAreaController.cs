@@ -19,23 +19,17 @@ public class TriggerAreaController : MonoBehaviour
         _kleptoNpcController = kleptoNpc.GetComponent<KleptomaniacController>();
     }
 
-    private void OnTriggerEnter2D(Collider2D col)
+    /*private void OnTriggerEnter2D(Collider2D col)
     {
         if (player.transform.position.x > kleptoNpc.transform.position.x)
         {
             _kleptoNpcController._whichSide = 1;
-            //_attackPoint = rightPoint;
         }
         else if (player.transform.position.x < kleptoNpc.transform.position.x)
         {
             _kleptoNpcController._whichSide = 0;
-            //_attackPoint = leftPoint;
         }
-        /*if (col.GetComponent<PlayerInfo>())
-        {
-            OnAttack?.Invoke();
-        }*/
-    }
+    }*/
 
     private void OnTriggerStay2D(Collider2D other)
     {

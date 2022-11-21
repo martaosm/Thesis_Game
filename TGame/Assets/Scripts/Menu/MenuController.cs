@@ -21,9 +21,11 @@ namespace Menu
             SceneManager.LoadScene("Prologue");
             PlayerPrefs.SetInt("FireNpcEncounters", 0);
             PlayerPrefs.SetInt("hasKey", 0);
-            PlayerPrefs.SetInt("IsFree", 0);
-            PlayerPrefs.SetInt("GuardEncounters", 0);
-            PlayerPrefs.SetInt("DemonGuardDone", 0);
+            PlayerPrefs.SetInt("hasMark", 0);
+            PlayerPrefs.SetInt("PlayerHealth", 100);
+            PlayerPrefs.SetInt("IsFree", 0); //is npc in chapter1 let put by player
+            PlayerPrefs.SetInt("GuardEncounters", 0);//how many times player trigger conversation with guard
+            PlayerPrefs.SetInt("DemonGuardDone", 0);//player dealt with guard
             PlayerPrefs.SetInt("CandyGiverDealt", 0);
         }
 

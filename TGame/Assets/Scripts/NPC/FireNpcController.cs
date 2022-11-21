@@ -28,19 +28,14 @@ namespace NPC
         private BoxCollider2D _collider;
         private Animator _animation;
         private SpriteRenderer _fireNpc;
-        private Rigidbody2D _rb;
         private CellDoorController _cellDoorController;
-        private Transform _attackPoint;
+        [SerializeField] private Vector2 destination;
         [SerializeField] private float speed;
         [SerializeField] private LayerMask jumpGround;
         [SerializeField] private List<string> convoWhenHasKey = new List<string>();
         [SerializeField] private List<string> convoWhenHasKeyNot = new List<string>();
         [SerializeField] private TextMeshProUGUI panelText;
         [SerializeField] private GameObject player;
-        [SerializeField] private Transform leftPoint;
-        [SerializeField] private Transform rightPoint;
-        [SerializeField] private Transform centerPoint;
-        [SerializeField] private GameObject triggerArea;
 
         private void Start()
         {
@@ -48,7 +43,6 @@ namespace NPC
             _collider = GetComponent<BoxCollider2D>();
             _animation = GetComponent<Animator>();
             _fireNpc = GetComponent<SpriteRenderer>();
-            //_rb = GetComponent<Rigidbody2D>();
             _cellDoorController = FindObjectOfType<CellDoorController>();
         }
 
@@ -56,28 +50,32 @@ namespace NPC
         {
             if (SceneManager.GetActiveScene().name == "Chapter1")
             {
-                Physics2D.IgnoreCollision(_collider, player.GetComponent<BoxCollider2D>());
+                //Physics2D.IgnoreCollision(_collider, player.GetComponent<BoxCollider2D>());
                 if (_cellDoorController.DoorOpened)
                 {
                     _animation.SetBool("Attack", true);
-                    //_rb.velocity = new Vector2(speed, _rb.velocity.y);
+                    transform.position = Vector2.MoveTowards(transform.position, destination, speed * Time.deltaTime);
+                    
                 }
             }
 
             if (player.transform.position.x > gameObject.transform.position.x)
             {
-                gameObject.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
-                //_attackPoint = rightPoint;
+                gameObject.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
             }
             else if (player.transform.position.x < gameObject.transform.position.x)
             {
-                gameObject.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
-                //_attackPoint = leftPoint;
+                gameObject.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
+            }
+
+            if (transform.position.x == destination.x)
+            {
+                Destroy(gameObject);
             }
                 //UpdateAnimation();
         }
 
-        private void UpdateAnimation()
+        /*private void UpdateAnimation()
         {
             if (_rb.velocity.magnitude < 0f )
             { 
@@ -107,7 +105,7 @@ namespace NPC
                 _animation.Play("FireJump");
             }
             
-        }
+        }*/
 
         public void ConvoController()
         {
@@ -138,14 +136,12 @@ namespace NPC
         {
             _encountersCount = PlayerPrefs.GetInt("FireNpcEncounters");
             _isFree = PlayerPrefs.GetInt("IsFree") == 1 ? true : false;
-            TriggerAreaController.OnAttack += FireAttack;
         }
 
         private void OnDisable()
         {
             PlayerPrefs.SetInt("FireNpcEncounters", _encountersCount);
             PlayerPrefs.SetInt("IsFree", _isFree ? 1 : 0);
-            TriggerAreaController.OnAttack -= FireAttack;
         }
         
         private bool IsGrounded()
@@ -153,13 +149,19 @@ namespace NPC
             return Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, Vector2.down, .1f, jumpGround);
         }
 
-        /*private void OnTriggerExit2D(Collider2D other)
+        private void OnTriggerEnter2D(Collider2D col)
         {
-            if (other.gameObject.CompareTag("Ramp"))
+            /*if (col.gameObject.CompareTag("Ramp"))
             {
+                _animation.SetBool("Attack", false);
                 Destroy(gameObject);
             }
-        }*/
+
+            if (col.gameObject.GetComponent<PlayerInfo>())
+            {
+                col.gameObject.GetComponent<Animator>().SetTrigger("HurtFromFire");
+            }*/
+        }
 
         private void OnCollisionEnter2D(Collision2D col)
         {
@@ -168,54 +170,6 @@ namespace NPC
                 _animation.SetBool("Attack", false);
                 Destroy(gameObject);
             }
-
-            if (col.gameObject.GetComponent<PlayerInfo>())
-            {
-                if (_animation.GetBool("Attack") == true)
-                {
-                    _animation.SetBool("Attack", false);
-                    gameObject.tag = "FireNpc";
-                }
-            }
         }
-
-        /*private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (col.GetComponent<PlayerInfo>())
-            {
-                //_animation.SetBool("Attack", true);
-                gameObject.tag = "enemyWeapon";
-                //StartCoroutine(FireAttack());
-                //transform.position = Vector2.MoveTowards(transform.position, col.gameObject.transform.position, 7 * Time.deltaTime);
-                /*gameObject.transform.position = Vector2.MoveTowards(gameObject.transform.position,
-                    col.gameObject.transform.position, 10 * Time.deltaTime);#1#
-            }
-        }*/
-
-        /*private void OnTriggerStay2D(Collider2D other)
-        {
-            if (other.GetComponent<PlayerInfo>())
-            {
-                Debug.Log("hahaha1");
-                //_animation.SetBool("Attack", true);
-                //gameObject.tag = "enemyWeapon";
-                //StartCoroutine(FireAttack());
-                //transform.position = Vector2.MoveTowards(transform.position, col.gameObject.transform.position, 7 * Time.deltaTime);
-                /*gameObject.transform.position = Vector2.MoveTowards(gameObject.transform.position,
-                    col.gameObject.transform.position, 10 * Time.deltaTime);#1#
-            }
-        }*/
-
-         private void FireAttack()
-         {
-             _attackPoint = leftPoint;
-            Debug.Log(_attackPoint);
-            gameObject.tag = "enemyWeapon";
-            transform.position = Vector2.MoveTowards(transform.position, _attackPoint.localPosition, 7 * Time.deltaTime);
-            //yield return new WaitForSeconds(1f);
-            //_attackPoint = centerPoint;
-            //transform.position = Vector2.MoveTowards(transform.position, _attackPoint.position, 7 * Time.deltaTime);
-        }
-        
     }
 }

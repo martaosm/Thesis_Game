@@ -1,4 +1,5 @@
 using System;
+using NPC.Enemies;
 using UnityEngine;
 
 public class Chapter2Controller : MonoBehaviour
@@ -18,6 +19,16 @@ public class Chapter2Controller : MonoBehaviour
         {
             mark.SetActive(false);
             hiddenChamber.SetActive(false);
+        }
+        
+        if (PlayerPrefs.GetInt("hasMark") == 1)
+        {
+            var skeletons = FindObjectsOfType<EnemyController>();
+            foreach(var skeleton in skeletons)
+            {
+                skeleton.gameObject.GetComponent<Collider2D>().isTrigger = true;
+               // skeleton.gameObject.GetComponentInChildren<Collider2D>().enabled = false;
+            }
         }
     }
 

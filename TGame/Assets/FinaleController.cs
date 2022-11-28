@@ -5,12 +5,26 @@ using UnityEngine;
 
 public class FinaleController : MonoBehaviour
 {
+    private bool _demonGuardDone;
+    private bool _isGuardAnEnemy;
+    private bool _isFree;
+    [SerializeField] private GameObject kleptoNpc;
     [SerializeField] private GameObject demonGuard;
     private void OnEnable()
     {
-        if (PlayerPrefs.GetInt("DemonGuardDone") == 1 && PlayerPrefs.GetInt("IsGuardAnEnemy") == 0)
+        _demonGuardDone = PlayerPrefs.GetInt("DemonGuardDone") == 1;
+        _isGuardAnEnemy = PlayerPrefs.GetInt("IsGuardAnEnemy") == 1;
+        _isFree = PlayerPrefs.GetInt("IsFree") == 1;
+        
+        if (_demonGuardDone && !_isGuardAnEnemy)
         {
             demonGuard.SetActive(true);
         }
+
+        if (_isFree && _isGuardAnEnemy || _isFree && !_demonGuardDone)
+        {
+            kleptoNpc.SetActive(true);
+        }
+            
     }
 }

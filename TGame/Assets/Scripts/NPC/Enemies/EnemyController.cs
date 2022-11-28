@@ -17,6 +17,7 @@ namespace NPC.Enemies
         private PlayerInfo _playerInfo;
         private Collider2D _collider2D;
         private bool _isDefeated;
+        [SerializeField] private GameObject player;
         [SerializeField] private LayerMask playerLayer;
         [SerializeField] private Transform playerCheckPoint;
         [SerializeField] private float playerCheckSize;
@@ -31,14 +32,26 @@ namespace NPC.Enemies
     
         private void Update()
         {
-            if (Physics2D.OverlapCircleAll(playerCheckPoint.position, playerCheckSize, playerLayer).Length > 0 &&
-                _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && !_isDefeated)
+            if (!_playerInfo.HasMark && _playerInfo._health > 0)
             {
-                _animator.SetBool(Attack, true);
+                if (Physics2D.OverlapCircleAll(playerCheckPoint.position, playerCheckSize, playerLayer).Length > 0 &&
+                    _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && !_isDefeated)
+                {
+                    _animator.SetBool(Attack, true);
+                }
+                else
+                {
+                    _animator.SetBool(Attack, false);
+                } 
             }
-            else
+            
+            if (player.transform.position.x > gameObject.transform.position.x)
             {
-                _animator.SetBool(Attack, false);
+                gameObject.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
+            }
+            else if (player.transform.position.x < gameObject.transform.position.x)
+            {
+                gameObject.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
             }
         }
         

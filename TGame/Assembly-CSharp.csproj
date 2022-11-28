@@ -70,12 +70,15 @@
      <Compile Include="Assets\Scripts\Menu\TextSwayer.cs" />
      <Compile Include="Assets\Chapter1Controller.cs" />
      <Compile Include="Assets\FinaleController.cs" />
+     <Compile Include="Assets\Chapter3Controller.cs" />
      <Compile Include="Assets\KleptomaniacController.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerInfo.cs" />
      <Compile Include="Assets\CandyGiverController.cs" />
+     <Compile Include="Assets\DemonGuardFinaleController.cs" />
      <Compile Include="Assets\PrologueController.cs" />
      <Compile Include="Assets\Chapter2Controller.cs" />
      <Compile Include="Assets\Scripts\Menu\MenuController.cs" />
+     <Compile Include="Assets\GameOverController.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Sprites\Main Character\Warrior\License.txt" />

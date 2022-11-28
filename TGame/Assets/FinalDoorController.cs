@@ -1,9 +1,11 @@
 using Player;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FinalDoorController : MonoBehaviour
 {
+    private bool _doorOpened;
     private Animator _animator;
     [SerializeField] private TextMeshProUGUI instructionsText;
     private static readonly int DoorOpened = Animator.StringToHash("DoorOpened");
@@ -17,11 +19,7 @@ public class FinalDoorController : MonoBehaviour
     {
         if (col.TryGetComponent(out PlayerInfo playerInfo))
         {
-            if (playerInfo._hasKey)
-            {
-              instructionsText.gameObject.SetActive(true);
-              instructionsText.text = "Press E to open the door";  
-            }
+            instructionsText.gameObject.SetActive(true);
         }
     }
 
@@ -29,13 +27,25 @@ public class FinalDoorController : MonoBehaviour
     {
         if (other.TryGetComponent(out PlayerInfo playerInfo))
         {
-            if (playerInfo._hasKey)
+            if (playerInfo._hasKey && !_doorOpened)
             {
+                instructionsText.text = "Press E to open the door";
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     _animator.SetBool(DoorOpened, true);
+                    _doorOpened = true;
                 }
             }
+
+            if (_doorOpened)
+            {
+                instructionsText.text = "Press E to pass through";
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    SceneManager.LoadScene("Ending");
+                }
+            }
+            
         }
     }
 

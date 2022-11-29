@@ -27,6 +27,7 @@ namespace Menu
             PlayerPrefs.SetInt("GuardEncounters", 0);//how many times player trigger conversation with guard
             PlayerPrefs.SetInt("DemonGuardDone", 0);//player dealt with guard
             PlayerPrefs.SetInt("CandyGiverDealt", 0);
+            PlayerPrefs.SetInt("FinalDoorOpened", 0);
         }
 
         private void QuitGame()

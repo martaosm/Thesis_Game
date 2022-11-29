@@ -10,6 +10,7 @@ TagManager:
   - Mark
   - enemyWeapon
   - Ramp
+  - GameMusic
   layers:
   - Default
   - TransparentFX

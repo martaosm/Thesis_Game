@@ -317,6 +317,14 @@ namespace Player
             }
         }
 
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.gameObject.CompareTag("enemyWeapon"))
+            {
+                _playerInfo.InputEnabled = true;
+            }
+        }
+
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.blue;

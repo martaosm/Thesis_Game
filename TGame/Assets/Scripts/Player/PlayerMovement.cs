@@ -42,6 +42,8 @@ namespace Player
         [SerializeField] private LayerMask enemyDemonGuard;
         [SerializeField] private LayerMask enemyCandyGiver;
         [SerializeField] private LayerMask kleptoNpc;
+        public delegate void KleptoDeath();
+        public static event KleptoDeath OnKleptoDeath;
         private static readonly int State = Animator.StringToHash("state");
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int Hit = Animator.StringToHash("Hit");
@@ -247,14 +249,19 @@ namespace Player
             Collider2D[] hitFire = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, kleptoNpc);
             foreach (var hitEnemy in hitFire)
             {
-                //hitEnemy.gameObject.GetComponent<EnemyController>().Life -= 2;
+                hitEnemy.gameObject.GetComponent<KleptomaniacController>()._health -= 5f;
+                if (hitEnemy.gameObject.GetComponent<KleptomaniacController>()._health <= 0)
+                {
+                    hitEnemy.gameObject.GetComponent<Animator>().SetTrigger("Death");
+                    OnKleptoDeath?.Invoke();
+                }
                 /*if (hitEnemy.gameObject.GetComponent<EnemyController>().Life <= 0)
                 {
                     hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Death);
                     StartCoroutine(hitEnemy.gameObject.GetComponent<EnemyController>().DeadBodyDestroy());
                     break;
                 }*/
-                hitEnemy.gameObject.GetComponent<Animator>().SetTrigger("Death");
+                
             }
             
             
@@ -314,6 +321,24 @@ namespace Player
                 _playerInfo._health -= 10;
                 _animation.Play("PlayerHurt");
                 
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D col)
+        {
+            if (col.gameObject.CompareTag("enemyWeapon"))
+            {
+                _playerInfo.InputEnabled = false;
+                _playerInfo._health -= 10;
+                _animation.Play("PlayerHurt");
+            }
+        }
+
+        private void OnCollisionExit2D(Collision2D other)
+        {
+            if (other.gameObject.CompareTag("enemyWeapon"))
+            {
+                _playerInfo.InputEnabled = true;
             }
         }
 

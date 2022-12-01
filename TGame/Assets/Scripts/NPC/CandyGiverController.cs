@@ -3,6 +3,7 @@ using System.Collections;
 using Player;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CandyGiverController : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class CandyGiverController : MonoBehaviour
     private bool _isPlayerAnEnemy;
     private bool _answerGiven;
     private String _answer = "";
+    [SerializeField] private Slider _slider;
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject hitBox;
     [SerializeField] private GameObject panel;
@@ -39,6 +41,15 @@ public class CandyGiverController : MonoBehaviour
 
     private void Update()
     {
+        if (_life <= 0)
+        {
+            _slider.gameObject.SetActive(false);
+        }
+        else
+        {
+            _slider.value = _life;
+        }
+        
         if (_playerInfo._health <= 0)
         {
             _isPlayerAnEnemy = false;
@@ -47,6 +58,7 @@ public class CandyGiverController : MonoBehaviour
         if (_life <= 0)
         {
             StartCoroutine(CandyGiverDeath());
+            closedChamber.SetActive(false);
         }
         
         if (player.transform.position.x > gameObject.transform.position.x)

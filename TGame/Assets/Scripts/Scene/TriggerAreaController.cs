@@ -1,3 +1,4 @@
+using NPC;
 using Player;
 using UnityEngine;
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Player;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DemonGuardController : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class DemonGuardController : MonoBehaviour
     private bool _answerGiven;
     private Animator _animator;
     private PlayerInfo _playerInfo;
+    [SerializeField] private Slider _slider;
     [SerializeField] private GameObject player;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private Transform triggerArea;
@@ -49,10 +51,20 @@ public class DemonGuardController : MonoBehaviour
 
     private void Update()
     {
+        if (_life <= 0)
+        {
+            _slider.gameObject.SetActive(false);
+        }
+        else
+        {
+            _slider.value = _life;
+        }
+        
         if (_playerInfo._health <= 0)
         {
             _isPlayerAnEnemy = false;
         }
+        
         if (_answer != "" && _answer != "answer given")
         {
             switch (_answer)

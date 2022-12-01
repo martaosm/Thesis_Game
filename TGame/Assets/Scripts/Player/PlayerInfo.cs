@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Player
 {
@@ -11,6 +12,7 @@ namespace Player
         public bool _hasKey;
         public bool _hasMark;
         private bool _inputEnabled = true;
+        [SerializeField] private Slider _slider;
         public bool InputEnabled
         {
             get => _inputEnabled;
@@ -27,6 +29,18 @@ namespace Player
         {
             get => _hasMark;
             set => _hasMark = value;
+        }
+
+        private void Update()
+        {
+            if (_health <= 0)
+            {
+                _slider.gameObject.SetActive(false);
+            }
+            else
+            {
+                _slider.value = _health;
+            }
         }
 
         public bool GetIsAttacking()

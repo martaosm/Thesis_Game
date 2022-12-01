@@ -8019,6 +8019,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562345108}
     m_Modifications:
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7503333165310825778, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -8846,6 +8854,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562345108}
     m_Modifications:
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7503333165310825778, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -9029,6 +9045,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562345108}
     m_Modifications:
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7503333165310825778, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -9277,6 +9301,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562345108}
     m_Modifications:
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7503333165310825778, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -9641,6 +9673,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562345108}
     m_Modifications:
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7503333165310825778, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -10298,7 +10338,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6222014982782767907, guid: 838852caf61b7bd45b13e22d6bbcc2e8, type: 3}
       propertyPath: attackRange
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6222014982782767907, guid: 838852caf61b7bd45b13e22d6bbcc2e8, type: 3}
       propertyPath: enemyLayer.m_Bits
@@ -10665,7 +10705,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2307014203574354249, guid: 8af6d2962303ae24e8f1a97269c042e3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4319922662392840653, guid: 8af6d2962303ae24e8f1a97269c042e3, type: 3}
       propertyPath: m_RootOrder
@@ -10764,6 +10804,14 @@ PrefabInstance:
     - target: {fileID: 6631767361775731158, guid: 8af6d2962303ae24e8f1a97269c042e3, type: 3}
       propertyPath: conversationTruth.Array.data[1]
       value: I give up! You're not even worth it. I'm out of here.
+      objectReference: {fileID: 0}
+    - target: {fileID: 7984810020327025662, guid: 8af6d2962303ae24e8f1a97269c042e3, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7984810020327025662, guid: 8af6d2962303ae24e8f1a97269c042e3, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8af6d2962303ae24e8f1a97269c042e3, type: 3}
@@ -14032,6 +14080,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562345108}
     m_Modifications:
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7503333165310825778, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -14093,6 +14149,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562345108}
     m_Modifications:
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 773819798099525930, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7503333165310825778, guid: 92ec7104ffac79f4e94f538761174c1c, type: 3}
       propertyPath: m_RootOrder
       value: 1

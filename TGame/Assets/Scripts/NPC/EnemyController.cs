@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Player;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace NPC.Enemies
 {
@@ -17,6 +18,7 @@ namespace NPC.Enemies
         private PlayerInfo _playerInfo;
         private Collider2D _collider2D;
         private bool _isDefeated;
+        [SerializeField] private Slider _slider;
         [SerializeField] private GameObject player;
         [SerializeField] private LayerMask playerLayer;
         [SerializeField] private Transform playerCheckPoint;
@@ -32,6 +34,14 @@ namespace NPC.Enemies
     
         private void Update()
         {
+            if (_life <= 0)
+            {
+                _slider.gameObject.SetActive(false);
+            }
+            else
+            {
+                _slider.value = _life;
+            }
             if (!_playerInfo.HasMark && _playerInfo._health > 0)
             {
                 if (Physics2D.OverlapCircleAll(playerCheckPoint.position, playerCheckSize, playerLayer).Length > 0 &&

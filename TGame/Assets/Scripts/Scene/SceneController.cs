@@ -3,7 +3,6 @@ using System.Collections;
 using Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-//using UnityEngine.UIElements;
 using UnityEngine.UI;
 
 namespace Scene
@@ -14,7 +13,6 @@ namespace Scene
         private float _dirX;
         private CameraController _cameraController;
         [SerializeField] private GameObject player;
-        [SerializeField] private GameObject checkpoint;
         [SerializeField] private GameObject pauseCanvas;
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button startOverButton;
@@ -55,25 +53,29 @@ namespace Scene
                 if (Input.GetAxisRaw("Horizontal")>0)
                 {
                     _dirX = 1;
-                }else if (Input.GetAxisRaw("Horizontal") < 0)
+                }
+                else if (Input.GetAxisRaw("Horizontal") < 0)
                 {
                     _dirX = -1;
                 }
-                //_dirX = Input.GetAxisRaw("Horizontal");
                 _cameraController.enabled = false;
                 _nextChamber = true;
+                gameObject.SetActive(true);
                 StartCoroutine(MoveToNextChamber());
             }
         }
 
-        IEnumerator MoveToNextChamber()
+        private IEnumerator MoveToNextChamber()
         {
             yield return new WaitForSeconds(3f);
             if (_dirX > 0)
             {
+                PlayerPrefs.SetString("spawnPoint", "left");
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            }else if (_dirX < 0)
+            }
+            else if (_dirX < 0)
             {
+                PlayerPrefs.SetString("spawnPoint", "right");
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
             }
         }

@@ -4,7 +4,7 @@ namespace ChaptersControllers
 {
     public class FinaleController : MonoBehaviour
     {
-        private bool _isDoorOpened;
+        //private bool _isDoorOpened;
         private bool _demonGuardDone;
         private bool _isGuardAnEnemy;
         private bool _isFree;

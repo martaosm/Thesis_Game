@@ -497,7 +497,9 @@ MonoBehaviour:
   _health: 100
   _hasKey: 1
   _hasMark: 0
-  _slider: {fileID: 1989245890036021194}
+  slider: {fileID: 1989245890036021194}
+  rightSpawnPoint: {fileID: 0}
+  leftSpawnPoint: {fileID: 0}
 --- !u!1 &6854104240343022626
 GameObject:
   m_ObjectHideFlags: 0

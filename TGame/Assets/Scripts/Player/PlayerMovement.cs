@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using NPC;
-using NPC.Enemies;
 using Scene;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,6 +26,13 @@ namespace Player
         private Animator _animation;
         private BoxCollider2D _collider;
         private float _dirX = 0f;
+
+        public float DirX
+        {
+            get => _dirX;
+            set => _dirX = value;
+        }
+        
         private MovementState _state;
         private bool _canMove = true;
         private float _attackRate = 2f;
@@ -50,6 +56,7 @@ namespace Player
         private static readonly int Death = Animator.StringToHash("Death");
         private static readonly int HurtFromFire = Animator.StringToHash("HurtFromFire");
         private static readonly int Crouch = Animator.StringToHash("Crouch");
+        private static readonly int Hurt = Animator.StringToHash("Hurt");
 
         private enum MovementState
         {
@@ -85,10 +92,7 @@ namespace Player
                 {
                     _dirX = Input.GetAxisRaw("Horizontal");
                     _rb.velocity = new Vector2(_dirX * _speed, _rb.velocity.y);
-                //}
-
-                //if (!_isPlayerCrouching)
-                //{
+                    
                     if (Input.GetButtonDown("Jump") && IsGrounded() && _playerInfo.InputEnabled)
                     {
                         _rb.velocity = new Vector2(_rb.velocity.x, _jumpForce);
@@ -101,13 +105,11 @@ namespace Player
             PlayerAttack(IsGrounded());
             WallSlide();
 
-            if (_playerInfo._health == 0)
+            if (_playerInfo._health <= 0)
             {
-                print("you ded");
-                //_collider.enabled = false;
                 _animation.Play("PlayerDeath");
                 StartCoroutine(ChangeToGameOverScene());
-                _playerInfo._health = -1;
+                _playerInfo._health = 1;
             }
         }
 
@@ -181,13 +183,16 @@ namespace Player
         {
             if (Time.time >= _nextAttackTime)
             {
-                if (Input.GetKeyDown(KeyCode.Mouse0) && grounded && _playerInfo.InputEnabled)
+                if (!_isPlayerCrouching)
                 {
-                    StartCoroutine(PlayerExecuteAttack());
-                    _rb.velocity = new Vector2(0, _rb.velocity.y);
-                    _canMove = false;
-                    _playerInfo.SetIsAttacking(true);
-                    _nextAttackTime = Time.time + 1f / _attackRate;
+                    if (Input.GetKeyDown(KeyCode.Mouse0) && grounded && _playerInfo.InputEnabled)
+                    {
+                        StartCoroutine(PlayerExecuteAttack());
+                        _rb.velocity = new Vector2(0, _rb.velocity.y);
+                        _canMove = false;
+                        _playerInfo.SetIsAttacking(true);
+                        _nextAttackTime = Time.time + 1f / _attackRate;
+                    }
                 }
             }
             
@@ -196,8 +201,59 @@ namespace Player
         IEnumerator PlayerExecuteAttack()
         {
             _animation.SetTrigger(Attack);
-            //skeletons
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+            foreach (var hitEnemy in hitEnemies)
+            {
+                if (hitEnemy.TryGetComponent(out EnemyController enemyController))
+                {
+                    enemyController.Life -= 2;
+                    if (enemyController.Life <= 0)
+                    {
+                        hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Death);
+                        StartCoroutine(hitEnemy.gameObject.GetComponent<EnemyController>().DeadBodyDestroy());
+                        break;
+                    }
+                    hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Hit);
+                }
+
+                if (hitEnemy.TryGetComponent(out DemonGuardController demonGuardController))
+                {
+                    demonGuardController.Life -= 5;
+                    if (demonGuardController.Life <= 10)
+                    {
+                        break;
+                    }
+                    //hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Hurt);
+                    StartCoroutine(ChangeEnemyColorWhenHit(hitEnemy.gameObject));
+                }
+
+                if (hitEnemy.TryGetComponent(out CandyGiverController candyGiverController))
+                {
+                    candyGiverController.Life -= 5;
+                    if (candyGiverController.Life <= 0)
+                    {
+                        //6A3434 //FFFFFF
+                        break;
+                    }
+                    hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Hurt);
+                    StartCoroutine(ChangeEnemyColorWhenHit(hitEnemy.gameObject));
+                    //gameObject.GetComponent<SpriteRenderer>().color = new Color(106f, 52f, 52f, 255); 
+                    //gameObject.GetComponent<SpriteRenderer>().color = new Color(255f, 255f, 255f, 255); 
+                }
+
+                if (hitEnemy.TryGetComponent(out KleptomaniacController kleptomaniacController))
+                {
+                    kleptomaniacController._health -= 5f;
+                    if (kleptomaniacController._health <= 0)
+                    {
+                        hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Death);
+                        OnKleptoDeath?.Invoke();
+                    }
+                    StartCoroutine(ChangeEnemyColorWhenHit(hitEnemy.gameObject));
+                }
+            }
+            //skeletons
+            /*Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
             foreach (var hitEnemy in hitEnemies)
             {
                 hitEnemy.gameObject.GetComponent<EnemyController>().Life -= 2;
@@ -260,9 +316,9 @@ namespace Player
                     hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Death);
                     StartCoroutine(hitEnemy.gameObject.GetComponent<EnemyController>().DeadBodyDestroy());
                     break;
-                }*/
+                }#1#
                 
-            }
+            }*/
             
             
             yield return new WaitForSeconds(1f);
@@ -356,6 +412,14 @@ namespace Player
             Gizmos.DrawCube(wallCheckPoint.position, wallCheckSize);
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(attackPoint.position, attackRange);
+        }
+
+        private IEnumerator ChangeEnemyColorWhenHit(GameObject enemy)
+        {
+            //gameObject.GetComponent<SpriteRenderer>().color = new Color(106f, 52f, 52f, 255); 
+            enemy.GetComponent<SpriteRenderer>().color = new Color(29f, 0f, 0f, 255); 
+            yield return new WaitForSeconds(0.5f);
+            enemy.GetComponent<SpriteRenderer>().color = new Color(255f, 255f, 255f, 255); 
         }
 
         private void EnableInput()

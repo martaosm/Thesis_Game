@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NPC.Enemies;
+using NPC;
 using UnityEngine;
 
 public class PrologueController : MonoBehaviour

@@ -4,7 +4,7 @@ using Player;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace NPC.Enemies
+namespace NPC
 {
     public class EnemyController : MonoBehaviour
     {
@@ -20,28 +20,54 @@ namespace NPC.Enemies
         private bool _isDefeated;
         [SerializeField] private Slider _slider;
         [SerializeField] private GameObject player;
+        [SerializeField] private GameObject hitBox;
         [SerializeField] private LayerMask playerLayer;
         [SerializeField] private Transform playerCheckPoint;
         [SerializeField] private float playerCheckSize;
         private static readonly int Attack = Animator.StringToHash("Attack");
+
+        private void OnEnable()
+        {
+            PlayerInfo.OnGetMark += PlayerHasMark;
+        }
+
+        private void OnDisable()
+        {
+            PlayerInfo.OnGetMark -= PlayerHasMark;
+        }
 
         private void Start()
         {
             _animator = GetComponent<Animator>();
             _playerInfo = FindObjectOfType<PlayerInfo>();
             _collider2D = GetComponent<Collider2D>();
+            if (_playerInfo.HasMark)
+            {
+                _collider2D.isTrigger = true;
+                hitBox.SetActive(false);
+            }
         }
     
         private void Update()
         {
+            if (_playerInfo.HasMark)
+            {
+                _collider2D.isTrigger = true;
+                hitBox.SetActive(false);
+            }
+            
             if (_life <= 0)
             {
                 _slider.gameObject.SetActive(false);
+                hitBox.SetActive(false);
+                playerCheckPoint.gameObject.SetActive(false);
+                //_collider2D.enabled = false;
             }
             else
             {
                 _slider.value = _life;
             }
+            
             if (!_playerInfo.HasMark && _playerInfo._health > 0)
             {
                 if (Physics2D.OverlapCircleAll(playerCheckPoint.position, playerCheckSize, playerLayer).Length > 0 &&
@@ -54,22 +80,34 @@ namespace NPC.Enemies
                     _animator.SetBool(Attack, false);
                 } 
             }
-            
-            if (player.transform.position.x > gameObject.transform.position.x)
+
+            if (_life > 0)
             {
-                gameObject.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
+                if (player.transform.position.x > gameObject.transform.position.x)
+                {
+                    gameObject.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
+                }
+                else if (player.transform.position.x < gameObject.transform.position.x)
+                {
+                    gameObject.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
+                } 
             }
-            else if (player.transform.position.x < gameObject.transform.position.x)
-            {
-                gameObject.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
-            }
+        }
+
+        private void PlayerHasMark()
+        {
+            _collider2D.isTrigger = true;
+            hitBox.SetActive(false);
         }
         
         public IEnumerator DeadBodyDestroy()
         {
             _isDefeated = true;
-            yield return new WaitForSeconds(2f);
-            Destroy(gameObject);
+            yield return new WaitForSeconds(1f);
+            var o = gameObject;
+            o.layer = 0;
+            o.tag = "Life";
+            _collider2D.isTrigger = true;
         }
         
         private void OnDrawGizmosSelected()

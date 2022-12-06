@@ -47,7 +47,7 @@ namespace Scene
                 if (playerInfo._hasKey && !_doorOpened)
                 {
                     instructionsText.text = "Press E to open the door";
-                    if (Input.GetKeyDown(KeyCode.E))
+                    if (Input.GetKey(KeyCode.E))
                     {
                         _animator.SetBool(DoorOpened, true);
                         _doorOpened = true;

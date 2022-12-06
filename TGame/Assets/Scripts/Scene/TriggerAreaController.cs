@@ -1,3 +1,4 @@
+using System;
 using NPC;
 using Player;
 using UnityEngine;
@@ -14,6 +15,10 @@ namespace Scene
         public delegate void Idle();
         public static event Idle OnIdle;
 
+        public delegate void BackToCenter();
+
+        public static event BackToCenter OnBackToCenter;
+
         private void Start()
         {
             _kleptoNpcController = kleptoNpc.GetComponent<KleptomaniacController>();
@@ -29,6 +34,14 @@ namespace Scene
             if (other.GetComponent<PlayerInfo>() && other.transform.position.y>=9.34f)
             {
                 OnIdle?.Invoke();
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.GetComponent<PlayerInfo>())
+            {
+                OnBackToCenter?.Invoke();
             }
         }
     }

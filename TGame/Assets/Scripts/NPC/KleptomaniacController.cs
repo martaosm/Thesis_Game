@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using Player;
 using Scene;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,20 +9,16 @@ namespace NPC
 {
     public class KleptomaniacController : MonoBehaviour
     {
-        /*public int _whichSide; //right - 1, left - 0
-    public bool _isAtCenterPoint = true;*/
         public float _health = 25f;
-        private Vector2 _attackPoint;
         private Animator _animator;
         private Collider2D _collider;
         private Rigidbody2D _rb;
         private bool _isDead;
-        [SerializeField] private Slider _slider;
-        [SerializeField] private Sprite _newSprite;
+        [SerializeField] private Vector2 center;
+        [SerializeField] private Slider slider;
         [SerializeField] private GameObject player;
-        [SerializeField] private Vector2 leftPoint;
-        [SerializeField] private Vector2 rightPoint;
-        [SerializeField] private Vector2 centerPoint;
+        private static readonly int Attack = Animator.StringToHash("Attack");
+        private static readonly int Walk = Animator.StringToHash("Walk");
 
         private void Start()
         {
@@ -36,11 +31,11 @@ namespace NPC
         {
             if (_health <= 0)
             {
-                _slider.gameObject.SetActive(false);
+                slider.gameObject.SetActive(false);
             }
             else
             {
-                _slider.value = _health;
+                slider.value = _health;
             }
             
             if (!_isDead)
@@ -54,15 +49,17 @@ namespace NPC
                     gameObject.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
                 }
 
-                if (!_animator.GetBool("Attack") &&
+                if (!_animator.GetBool(Attack) &&
                     Math.Abs(player.transform.position.x - transform.position.x) > 1.5f &&
                     player.transform.position.y >= 9.34f)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position,
-                        new Vector2(player.transform.position.x, transform.position.y), 5 * Time.deltaTime);
+                    var position = transform.position;
+                    position = Vector2.MoveTowards(position,
+                        new Vector2(player.transform.position.x, position.y), 5 * Time.deltaTime);
+                    transform.position = position;
                     if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                     {
-                        _animator.SetTrigger("Walk");
+                        _animator.SetTrigger(Walk);
                     }
                 }  
             }
@@ -72,6 +69,7 @@ namespace NPC
         {
             TriggerAreaController.OnAttack += FireAttack;
             TriggerAreaController.OnIdle += IdleState;
+            TriggerAreaController.OnBackToCenter += BackToCenter;
             PlayerMovement.OnKleptoDeath += AfterDeath;
         }
 
@@ -79,6 +77,7 @@ namespace NPC
         {
             TriggerAreaController.OnAttack -= FireAttack;
             TriggerAreaController.OnIdle -= IdleState;
+            TriggerAreaController.OnBackToCenter -= BackToCenter;
             PlayerMovement.OnKleptoDeath -= AfterDeath;
         }
     
@@ -87,20 +86,26 @@ namespace NPC
             if (!_isDead)
             {
                 gameObject.tag = "enemyWeapon";
-                _animator.SetBool("Attack", true);
-                //if (Math.Abs(player.transform.position.x - transform.position.x) > 1.25f)
-                //{
-                transform.position = Vector2.MoveTowards(transform.position,
-                    new Vector2(player.transform.position.x, transform.position.y), 10 * Time.deltaTime);
-                //} 
+                _animator.SetBool(Attack, true);
+                var position = transform.position;
+                position = Vector2.MoveTowards(position,
+                    new Vector2(player.transform.position.x, position.y), 10 * Time.deltaTime);
+                transform.position = position;
             }
-            
-        
         }
 
         private void IdleState()
         {
-            _animator.SetBool("Attack", false);
+            _animator.SetBool(Attack, false);
+        }
+
+        private void BackToCenter()
+        {
+            _animator.SetBool(Attack, false);
+            var position = transform.position;
+            position = Vector2.MoveTowards(position,
+                center, 10 * Time.deltaTime);
+            transform.position = position;
         }
 
         private void AfterDeath()
@@ -112,7 +117,7 @@ namespace NPC
             StartCoroutine(ChangeSprite());
         }
 
-        IEnumerator ChangeSprite()
+        private IEnumerator ChangeSprite()
         {
             yield return new WaitForSeconds(1f);
             _animator.Play("KeyAnimationKlepto");

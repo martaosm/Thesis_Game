@@ -11,6 +11,7 @@ TagManager:
   - enemyWeapon
   - Ramp
   - GameMusic
+  - Life
   layers:
   - Default
   - TransparentFX
@@ -23,9 +24,9 @@ TagManager:
   - Player
   - FireNpcLayer
   - Enemy
-  - EnemyDemonGuard
-  - EnemyCandyGiver
-  - KleptoNpc
+  - HiddenChamber
+  - 
+  - 
   - 
   - 
   - 

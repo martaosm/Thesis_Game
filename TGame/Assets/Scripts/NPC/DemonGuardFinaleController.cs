@@ -40,7 +40,7 @@ public class DemonGuardFinaleController : MonoBehaviour
     {
         if (other.TryGetComponent(out PlayerInfo playerInfo))
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKey(KeyCode.E))
             {
                 playerInfo.HasKey = true;
                 instructions.gameObject.SetActive(false);

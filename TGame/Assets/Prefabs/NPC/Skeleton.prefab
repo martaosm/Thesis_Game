@@ -418,7 +418,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7503333165310825778}
   - component: {fileID: 7503333165310825790}
-  - component: {fileID: 7503333165310825791}
   - component: {fileID: 7503333165310825776}
   - component: {fileID: 7503333165310825777}
   - component: {fileID: 7503333165310825789}
@@ -497,27 +496,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &7503333165310825791
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7503333165310825779}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 5
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7
 --- !u!61 &7503333165310825776
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -577,6 +555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slider: {fileID: 3325057370222634363}
   player: {fileID: 6222014982782767933, guid: 838852caf61b7bd45b13e22d6bbcc2e8, type: 3}
+  hitBox: {fileID: 2865053205426945190}
   playerLayer:
     serializedVersion: 2
     m_Bits: 256

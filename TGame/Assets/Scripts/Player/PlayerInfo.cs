@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Player
@@ -12,7 +11,15 @@ namespace Player
         public bool _hasKey;
         public bool _hasMark;
         private bool _inputEnabled = true;
-        [SerializeField] private Slider _slider;
+        private String _spawnPoint;
+        private PlayerMovement _playerMovement;
+        [SerializeField] private Slider slider;
+        [SerializeField] private Transform rightSpawnPoint;
+        [SerializeField] private Transform leftSpawnPoint;
+        public delegate void GetMark();
+        public static event GetMark OnGetMark;
+        
+        
         public bool InputEnabled
         {
             get => _inputEnabled;
@@ -35,11 +42,15 @@ namespace Player
         {
             if (_health <= 0)
             {
-                _slider.gameObject.SetActive(false);
+                slider.gameObject.SetActive(false);
             }
             else
             {
-                _slider.value = _health;
+                if (_health > 100)
+                {
+                    slider.maxValue = _health;
+                }
+                slider.value = _health;
             }
         }
 
@@ -65,14 +76,37 @@ namespace Player
             {
                 _hasMark = true;
                 col.gameObject.SetActive(false);
+                OnGetMark?.Invoke();
+            }
+
+            if (col.gameObject.CompareTag("Life") && _health <= slider.maxValue - 2)
+            {
+                _health += 2;
+                col.gameObject.SetActive(false);
+            }
+            if(col.gameObject.CompareTag("Life") && _health.Equals(slider.maxValue))
+            {
+                col.gameObject.SetActive(false);
             }
         }
 
         private void OnEnable()
         {
+            _playerMovement = GetComponent<PlayerMovement>();
             _hasKey = PlayerPrefs.GetInt("hasKey") == 1;
             _hasMark = PlayerPrefs.GetInt("hasMark") == 1;
             _health = PlayerPrefs.GetInt("PlayerHealth", (int)_health);
+            _spawnPoint = PlayerPrefs.GetString("spawnPoint");
+            if (_spawnPoint == "right")
+            {
+                _playerMovement.DirX = -1;
+                gameObject.transform.position = rightSpawnPoint.position;
+            }
+            else if (_spawnPoint == "left")
+            {
+                _playerMovement.DirX = 1;
+                gameObject.transform.position = leftSpawnPoint.position;
+            }
         }
 
         private void OnDisable()

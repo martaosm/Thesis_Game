@@ -12,11 +12,6 @@ namespace NPC
     public class DemonGuardController : MonoBehaviour
     {
         private int _guardEncountersCount;
-        public int GuardEncountersCount
-        {
-            get => _guardEncountersCount;
-            set => _guardEncountersCount = value;
-        }
 
         private float _life = 50f;
         public float Life
@@ -25,6 +20,7 @@ namespace NPC
             set => _life = value;
         }
 
+        private int _randomConvo;
         private bool _isGuardAnEnemy;
         private String _answer = "";
         private bool _isPlayerAnEnemy;
@@ -54,6 +50,7 @@ namespace NPC
 
         private void Update()
         {
+            //controls health bar
             if (_life <= 0)
             {
                 slider.gameObject.SetActive(false);
@@ -63,11 +60,14 @@ namespace NPC
                 slider.value = _life;
             }
         
-            if (_playerInfo._health <= 0)
+            //stop attacking when player's health equals or is under 0
+            if (_playerInfo.Health <= 0)//_health
             {
                 _isPlayerAnEnemy = false;
             }
         
+            //depending on answer of the player, if "yes" the player becomes an enemy and guard is set as an enemy, chamber is closed
+            //if "no" player is left alone or given a clue, guard doesn't become an enemy
             if (_answer != "" && _answer != "answer given")
             {
                 switch (_answer)
@@ -77,14 +77,18 @@ namespace NPC
                         _isGuardAnEnemy = true;
                         closedChamber.SetActive(true);
                         StartCoroutine(ConversationAfterAnswer());
+                        _answer = "answer given";
                         break;
                     case "no":
                         _isPlayerAnEnemy = false;
                         _isGuardAnEnemy = false;
                         StartCoroutine(ConversationAfterAnswer());
+                        _answer = "answer given";
                         break;
                 }
             }
+            
+            //before giving an answer, waiting for input from player
             if (_guardEncountersCount > 1 && !_answerGiven)
             {
                 if (Input.GetKey(KeyCode.Y))
@@ -100,6 +104,7 @@ namespace NPC
                 }
             }
 
+            //after defeat chamber is opened and guard leaves
             if (_life <= 10)
             {
                 _isPlayerAnEnemy = false;
@@ -107,6 +112,7 @@ namespace NPC
                 StartCoroutine(ConversationAfterDefeat());
             }
         
+            //npc faces player all the time
             if (player.transform.position.x > gameObject.transform.position.x)
             {
                 gameObject.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
@@ -117,17 +123,18 @@ namespace NPC
             }
         }
 
-        IEnumerator ConversationAfterAnswer()
+        //dialog controller after giving an answer, later dialog depends on player's answer
+        private IEnumerator ConversationAfterAnswer()
         {
             instructions.gameObject.SetActive(false);
-            panelText.text = _answer == "yes" ? conversationTruth[0] : conversationLies[0];
+            panelText.text = _answer == "yes" ? conversationTruth[0] : conversationLies[_randomConvo];
             yield return new WaitForSeconds(4f);
             FindObjectOfType<Chapter2Controller>().demonGuardDone = true;
             panel.SetActive(false);
-            _answer = "answer given";
         }
 
-        IEnumerator ConversationAfterDefeat()
+        //after player defeats npc, npc leaves 
+        private IEnumerator ConversationAfterDefeat()
         {
             panel.SetActive(true);
             panelText.text = conversationTruth[1];
@@ -151,9 +158,10 @@ namespace NPC
 
                 if (_answer == "answer given")
                 {
+                    //if player becomes an enemy, npc attacks player
                     if (_isPlayerAnEnemy)
                     {
-                        gameObject.layer = 10;//11
+                        gameObject.layer = 10;
                         if (Physics2D.OverlapBoxAll(triggerArea.position, triggerAreaSize, playerLayer).Length > 0 &&
                             _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                         {
@@ -166,8 +174,10 @@ namespace NPC
 
         private void OnTriggerEnter2D(Collider2D col)
         {
+            //text panel is set active, depending on player's health the method decides on giving them a clue
             if (col.gameObject.GetComponent<PlayerInfo>() && !_answerGiven)
             {
+                _randomConvo = _playerInfo.Health < _playerInfo.maxHealth/2 ? 0 : 1;//_health
                 _guardEncountersCount++;
                 panel.SetActive(true);
                 instructions.gameObject.SetActive(true);
@@ -176,6 +186,7 @@ namespace NPC
 
         private void OnTriggerExit2D(Collider2D other)
         {
+            //text panel is deactivated
             if (other.gameObject.GetComponent<PlayerInfo>() && !_answerGiven)
             {
                 panel.SetActive(false);
@@ -183,6 +194,7 @@ namespace NPC
             }
         }
 
+        //interaction controller, dialog depends on how many times player approaches the npc
         private void ConversationController()
         {
             if (_guardEncountersCount == 1)
@@ -190,7 +202,7 @@ namespace NPC
                 instructions.text = "Next [E]";
                 panelText.text = conversation[0];
             }
-            if (_guardEncountersCount > 1)
+            if (_guardEncountersCount > 1 && !_answerGiven)
             {
                 instructions.text = "[Y] yes / [N] no";
                 panelText.text = conversation[1];

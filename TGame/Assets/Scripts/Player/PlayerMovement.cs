@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using NPC;
-using Scene;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,15 +7,15 @@ namespace Player
 {
     public class PlayerMovement : MonoBehaviour
     {
-
         [Header("For WallSliding")] 
-        [SerializeField] private float wallSlideSpeed = 0;
+        private bool _isTouchingWall;
+        private bool _isWallSliding;
+        [SerializeField] private float wallSlideSpeed;
         [SerializeField] private LayerMask wallLayer;
         [SerializeField] private Transform wallCheckPoint;
         [SerializeField] private Vector2 wallCheckSize;
-        private bool _isTouchingWall;
-        private bool _isWallSliding;
         
+        private float _dirX;
         private bool _isBeingAttacked;
         private bool _isPlayerCrouching;
         private PlayerInfo _playerInfo;
@@ -25,8 +23,7 @@ namespace Player
         private SpriteRenderer _player;
         private Animator _animation;
         private BoxCollider2D _collider;
-        private float _dirX = 0f;
-
+        
         public float DirX
         {
             get => _dirX;
@@ -35,19 +32,14 @@ namespace Player
         
         private MovementState _state;
         private bool _canMove = true;
-        private float _attackRate = 2f;
-        private float _nextAttackTime = 0f;
-        private SceneController _sceneController;
-        [SerializeField] private float _jumpForce = 10f;
-        [SerializeField] private float _speed = 5f;
+        private const float AttackRate = 2f;
+        private float _nextAttackTime;
+        [SerializeField] private float jumpForce = 17f;
+        [SerializeField] private float speed = 10f;
         [SerializeField] private LayerMask jumpGround;
-        [SerializeField] private LayerMask fireNpcLayer;
         [SerializeField] private Transform attackPoint;
         [SerializeField] private float attackRange;
         [SerializeField] private LayerMask enemyLayer;
-        [SerializeField] private LayerMask enemyDemonGuard;
-        [SerializeField] private LayerMask enemyCandyGiver;
-        [SerializeField] private LayerMask kleptoNpc;
         public delegate void KleptoDeath();
         public static event KleptoDeath OnKleptoDeath;
         private static readonly int State = Animator.StringToHash("state");
@@ -58,6 +50,7 @@ namespace Player
         private static readonly int Crouch = Animator.StringToHash("Crouch");
         private static readonly int Hurt = Animator.StringToHash("Hurt");
 
+        //enum for movement state, determines what motion player is currently doing
         private enum MovementState
         {
             Idle,
@@ -75,44 +68,46 @@ namespace Player
             _animation = GetComponent<Animator>();
             _collider = GetComponent<BoxCollider2D>();
             _playerInfo = GetComponent<PlayerInfo>();
-            _sceneController = FindObjectOfType<SceneController>();
-            
         }
 
         private void Update()
         {
+            //if player can move and input is enabled
             if (_canMove && _playerInfo.InputEnabled)
             {
+                //if player is crouching they can move from side to side
                 if (_isPlayerCrouching)
                 {
                     _rb.velocity = new Vector2(0, 0);
                 }
                 
+                //moving from side to side and jumping
                 if (!_isPlayerCrouching)
                 {
                     _dirX = Input.GetAxisRaw("Horizontal");
-                    _rb.velocity = new Vector2(_dirX * _speed, _rb.velocity.y);
-                    
+                    _rb.velocity = new Vector2(_dirX * speed, _rb.velocity.y);
+                    //jump is available only if player is grounded
                     if (Input.GetButtonDown("Jump") && IsGrounded() && _playerInfo.InputEnabled)
                     {
-                        _rb.velocity = new Vector2(_rb.velocity.x, _jumpForce);
+                        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
                     }
                 }
             }
-
-            IsAttackedByFire();
+            
             UpdateAnimation();
             PlayerAttack(IsGrounded());
             WallSlide();
 
-            if (_playerInfo._health <= 0)
+            //player's "death" sequence, animation is played and coroutine started
+            if (_playerInfo.Health <= 0)
             {
                 _animation.Play("PlayerDeath");
                 StartCoroutine(ChangeToGameOverScene());
-                _playerInfo._health = 1;
+                _playerInfo.Health = 1;
             }
         }
 
+        //depends on enum, method changes animation, method also flips player's sprite depending on Horizontal input
         private void UpdateAnimation()
         {
             if (_dirX > 0f )
@@ -142,6 +137,7 @@ namespace Player
                 _state = MovementState.Fall;
             }
             
+            //if velocity.y is positive the player is in state of jumping, if it's negative then in state of falling
             if (_rb.velocity.y > .1f)
             {
                 _state = MovementState.Jump;
@@ -151,6 +147,7 @@ namespace Player
                 _state = MovementState.Fall;
             }
 
+            //if player is touching wall and is not grounded then they slide down using the wall
             if (IsTouchingWall() && !IsGrounded())
             {
                 _state = MovementState.WallSlide;
@@ -163,6 +160,7 @@ namespace Player
                 _playerInfo.InputEnabled = true;
             }
 
+            //using C key player can crouch
             if (Input.GetKey(KeyCode.C))
             {
                 _animation.SetBool(Crouch, true);
@@ -170,6 +168,7 @@ namespace Player
                 _isPlayerCrouching = true;
             }
 
+            //if C key is up player stops crouching
             if (Input.GetKeyUp(KeyCode.C))
             {
                 _animation.SetBool(Crouch, false);
@@ -179,36 +178,44 @@ namespace Player
             _animation.SetInteger(State, (int)_state);
         }
         
+        //attack sequence
         private void PlayerAttack(bool grounded)
         {
+            //condition which makes player play one attack animation at the time, so spamming the mouse button won't make player attack even after stopping
             if (Time.time >= _nextAttackTime)
             {
                 if (!_isPlayerCrouching)
                 {
+                    //if mouse button is pressed and player is grounded attack sequence starts
                     if (Input.GetKeyDown(KeyCode.Mouse0) && grounded && _playerInfo.InputEnabled)
                     {
                         StartCoroutine(PlayerExecuteAttack());
                         _rb.velocity = new Vector2(0, _rb.velocity.y);
                         _canMove = false;
-                        _playerInfo.SetIsAttacking(true);
-                        _nextAttackTime = Time.time + 1f / _attackRate;
+                        _playerInfo.IsAttacking = true;
+                        _nextAttackTime = Time.time + 1f / AttackRate;
                     }
                 }
             }
             
         }
 
-        IEnumerator PlayerExecuteAttack()
+        //attack execution
+        private IEnumerator PlayerExecuteAttack()
         {
             _animation.SetTrigger(Attack);
+            //checks if enemy is in range of the attack
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
             foreach (var hitEnemy in hitEnemies)
             {
+                //sequence for attacking skeletons
                 if (hitEnemy.TryGetComponent(out EnemyController enemyController))
                 {
+                    //taking skeleton hp if hit
                     enemyController.Life -= 2;
                     if (enemyController.Life <= 0)
                     {
+                        //player defeats skeleton
                         hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Death);
                         StartCoroutine(hitEnemy.gameObject.GetComponent<EnemyController>().DeadBodyDestroy());
                         break;
@@ -216,35 +223,39 @@ namespace Player
                     hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Hit);
                 }
 
+                //sequence for attacking demon guard
                 if (hitEnemy.TryGetComponent(out DemonGuardController demonGuardController))
                 {
+                    //taking guard hp if hit
                     demonGuardController.Life -= 5;
                     if (demonGuardController.Life <= 10)
                     {
                         break;
                     }
-                    //hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Hurt);
                     StartCoroutine(ChangeEnemyColorWhenHit(hitEnemy.gameObject));
                 }
-
+                
+                //sequence for attacking candy npc
                 if (hitEnemy.TryGetComponent(out CandyGiverController candyGiverController))
                 {
+                    //taking npc hp if hit
                     candyGiverController.Life -= 5;
                     if (candyGiverController.Life <= 0)
                     {
-                        //6A3434 //FFFFFF
                         break;
                     }
-                    hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Hurt);
-                    StartCoroutine(ChangeEnemyColorWhenHit(hitEnemy.gameObject));
-                    //gameObject.GetComponent<SpriteRenderer>().color = new Color(106f, 52f, 52f, 255); 
-                    //gameObject.GetComponent<SpriteRenderer>().color = new Color(255f, 255f, 255f, 255); 
+
+                    GameObject o;
+                    (o = hitEnemy.gameObject).GetComponent<Animator>().SetTrigger(Hurt);
+                    StartCoroutine(ChangeEnemyColorWhenHit(o));
                 }
 
+                //sequence for attacking fire npc
                 if (hitEnemy.TryGetComponent(out KleptomaniacController kleptomaniacController))
                 {
-                    kleptomaniacController._health -= 5f;
-                    if (kleptomaniacController._health <= 0)
+                    //taking npc hp if hit
+                    kleptomaniacController.Health -= 5f;
+                    if (kleptomaniacController.Health <= 0)
                     {
                         hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Death);
                         OnKleptoDeath?.Invoke();
@@ -252,80 +263,13 @@ namespace Player
                     StartCoroutine(ChangeEnemyColorWhenHit(hitEnemy.gameObject));
                 }
             }
-            //skeletons
-            /*Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
-            foreach (var hitEnemy in hitEnemies)
-            {
-                hitEnemy.gameObject.GetComponent<EnemyController>().Life -= 2;
-                if (hitEnemy.gameObject.GetComponent<EnemyController>().Life <= 0)
-                {
-                    hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Death);
-                    StartCoroutine(hitEnemy.gameObject.GetComponent<EnemyController>().DeadBodyDestroy());
-                    break;
-                }
-                hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Hit);
-            }
-            
-            //demon guard
-            Collider2D[] hitGuard = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyDemonGuard);
-            foreach (var hit in hitGuard)
-            {
-                hit.gameObject.GetComponent<DemonGuardController>().Life -= 5;
-                print(hit.gameObject.GetComponent<DemonGuardController>().Life);//remove
-                if (hit.gameObject.GetComponent<DemonGuardController>().Life <= 10)
-                {
-                    //hit.gameObject.GetComponent<Animator>().SetTrigger(Death);
-                    //StartCoroutine(hit.gameObject.GetComponent<EnemyController>().DeadBodyDestroy());
-                    //print("ok");
-                    break;
-                }
-                hit.gameObject.GetComponent<Animator>().SetTrigger("Hurt");
-            }
-            
-            //candy giver
-            //TODO: fight that creep
-            Collider2D[] hitCandy = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyCandyGiver);
-            foreach (var hit in hitCandy)
-            {
-                hit.gameObject.GetComponent<CandyGiverController>().Life -= 5;
-                print(hit.gameObject.GetComponent<CandyGiverController>().Life);//remove
-                if (hit.gameObject.GetComponent<CandyGiverController>().Life <= 0)
-                {
-                    //hit.gameObject.GetComponent<Animator>().SetTrigger(Death);
-                    //StartCoroutine(hit.gameObject.GetComponent<EnemyController>().DeadBodyDestroy());
-                    print("ok");//6A3434 //FFFFFF
-                    break;
-                }
-                hit.gameObject.GetComponent<Animator>().SetTrigger("Hurt");
-                gameObject.GetComponent<SpriteRenderer>().color = new Color(106f, 52f, 52f, 255); 
-                gameObject.GetComponent<SpriteRenderer>().color = new Color(255f, 255f, 255f, 255); 
-            }
-            
-            //klepto npc
-            Collider2D[] hitFire = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, kleptoNpc);
-            foreach (var hitEnemy in hitFire)
-            {
-                hitEnemy.gameObject.GetComponent<KleptomaniacController>()._health -= 5f;
-                if (hitEnemy.gameObject.GetComponent<KleptomaniacController>()._health <= 0)
-                {
-                    hitEnemy.gameObject.GetComponent<Animator>().SetTrigger("Death");
-                    OnKleptoDeath?.Invoke();
-                }
-                /*if (hitEnemy.gameObject.GetComponent<EnemyController>().Life <= 0)
-                {
-                    hitEnemy.gameObject.GetComponent<Animator>().SetTrigger(Death);
-                    StartCoroutine(hitEnemy.gameObject.GetComponent<EnemyController>().DeadBodyDestroy());
-                    break;
-                }#1#
-                
-            }*/
-            
-            
             yield return new WaitForSeconds(1f);
+            //when attack ends player can move again
             _canMove = true;
-            _playerInfo.SetIsAttacking(false);
+            _playerInfo.IsAttacking = false;
         }
 
+        //method controls wall slide action
         private void WallSlide()
         {
             if (_isTouchingWall && !IsGrounded() && _rb.velocity.y < -.1f)
@@ -343,27 +287,22 @@ namespace Player
             }
         }
 
+        //checks if player is grounded
         private bool IsGrounded()
         {
-            return Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, Vector2.down, .1f, jumpGround);
+            var bounds = _collider.bounds;
+            return Physics2D.BoxCast(bounds.center, bounds.size, 0f, Vector2.down, .1f, jumpGround);
         }
         
+        //checks if player is touching the wall
         private bool IsTouchingWall()
         {
             _isTouchingWall = Physics2D.OverlapBox(wallCheckPoint.position, wallCheckSize, 0, wallLayer);
             return _isTouchingWall;
         }
 
-        private bool IsAttackedByFire()
-        {
-            if (Physics2D.OverlapBox(wallCheckPoint.position, wallCheckSize, 0, fireNpcLayer))
-            {
-                _isBeingAttacked = true;
-            }
-            return _isBeingAttacked;
-        }
-
-        IEnumerator ChangeToGameOverScene()
+        //changes scene to game over scene
+        private IEnumerator ChangeToGameOverScene()
         {
             yield return new WaitForSeconds(1.5f);
             SceneManager.LoadScene("GameOverScene");
@@ -371,25 +310,28 @@ namespace Player
 
         private void OnTriggerEnter2D(Collider2D col)
         {
+            //player takes damage if is hit by enemy, input is disabled
             if (col.gameObject.CompareTag("enemyWeapon"))
             {
                 _playerInfo.InputEnabled = false;
-                _playerInfo._health -= 10;
+                _playerInfo.Health -= 10;
                 _animation.Play("PlayerHurt");
                 
             }
         }
 
+        //player takes damage if is hit by enemy, input is disabled
         private void OnCollisionEnter2D(Collision2D col)
         {
             if (col.gameObject.CompareTag("enemyWeapon"))
             {
                 _playerInfo.InputEnabled = false;
-                _playerInfo._health -= 10;
+                _playerInfo.Health -= 10;//_health
                 _animation.Play("PlayerHurt");
             }
         }
 
+        //after taking a hit input is enabled again
         private void OnCollisionExit2D(Collision2D other)
         {
             if (other.gameObject.CompareTag("enemyWeapon"))
@@ -398,6 +340,7 @@ namespace Player
             }
         }
 
+        //after taking a hit input is enabled again
         private void OnTriggerExit2D(Collider2D other)
         {
             if (other.gameObject.CompareTag("enemyWeapon"))
@@ -406,6 +349,7 @@ namespace Player
             }
         }
 
+        //draws shapes on player, help for programmer
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.blue;
@@ -414,19 +358,12 @@ namespace Player
             Gizmos.DrawSphere(attackPoint.position, attackRange);
         }
 
+        //changes enemy color for some period if enemy is hit by player
         private IEnumerator ChangeEnemyColorWhenHit(GameObject enemy)
         {
-            //gameObject.GetComponent<SpriteRenderer>().color = new Color(106f, 52f, 52f, 255); 
             enemy.GetComponent<SpriteRenderer>().color = new Color(29f, 0f, 0f, 255); 
             yield return new WaitForSeconds(0.5f);
             enemy.GetComponent<SpriteRenderer>().color = new Color(255f, 255f, 255f, 255); 
         }
-
-        private void EnableInput()
-        {
-            _playerInfo.InputEnabled = true;
-        }
-        
-        
     }
 }

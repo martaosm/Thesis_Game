@@ -1,12 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using Player;
 using Scene;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace NPC
 {
@@ -25,88 +21,40 @@ namespace NPC
             set => _encountersCount = value;
         }
         private PlayerInfo _playerInfo;
-        private BoxCollider2D _collider;
         private Animator _animation;
-        private SpriteRenderer _fireNpc;
         private CellDoorController _cellDoorController;
         [SerializeField] private Vector2 destination;
         [SerializeField] private float speed;
-        [SerializeField] private LayerMask jumpGround;
         [SerializeField] private List<string> convoWhenHasKey = new List<string>();
         [SerializeField] private List<string> convoWhenHasKeyNot = new List<string>();
         [SerializeField] private TextMeshProUGUI panelText;
-        [SerializeField] private GameObject player;
+        private static readonly int Attack = Animator.StringToHash("Attack");
 
         private void Start()
         {
             _playerInfo = FindObjectOfType<PlayerInfo>();
-            _collider = GetComponent<BoxCollider2D>();
             _animation = GetComponent<Animator>();
-            _fireNpc = GetComponent<SpriteRenderer>();
             _cellDoorController = FindObjectOfType<CellDoorController>();
         }
 
         private void Update()
         {
-            if (SceneManager.GetActiveScene().name == "Chapter1")
+            //if player opens the door then npc attacks them and steals the key
+            if (_cellDoorController.DoorOpened)
             {
-                //Physics2D.IgnoreCollision(_collider, player.GetComponent<BoxCollider2D>());
-                if (_cellDoorController.DoorOpened)
-                {
-                    _animation.SetBool("Attack", true);
-                    transform.position = Vector2.MoveTowards(transform.position, destination, speed * Time.deltaTime);
-                    
-                }
+                _animation.SetBool(Attack, true);
+                transform.position = Vector2.MoveTowards(transform.position, destination, speed * Time.deltaTime);
             }
-
-            if (player.transform.position.x > gameObject.transform.position.x)
-            {
-                gameObject.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
-            }
-            else if (player.transform.position.x < gameObject.transform.position.x)
-            {
-                gameObject.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
-            }
-
-            if (transform.position.x == destination.x)
+            
+            //when npc reaches destination then game object is destroyed
+            if (transform.position.x.Equals(destination.x))//transform.position.x == destination.x
             {
                 Destroy(gameObject);
             }
-                //UpdateAnimation();
-        }
-
-        /*private void UpdateAnimation()
-        {
-            if (_rb.velocity.magnitude < 0f )
-            { 
-                _fireNpc.flipX = false;
-            }
-            else if (_rb.velocity.magnitude > 0f )
-            {
-                _fireNpc.flipX = true;
-            }
-            if (_rb.velocity.magnitude < 0f && IsGrounded())
-            {
-                //_animation.Play("FireWalk");
-                _fireNpc.flipX = false;
-            }
-            else if (_rb.velocity.magnitude > 0f && IsGrounded())
-            {
-                //_animation.Play("FireWalk");
-                _fireNpc.flipX = true;
-            }
-            else if(_rb.velocity.magnitude==0f && IsGrounded() )
-            {
-                _animation.Play("FireNpcIdle");
-            }
-
-            if (!IsGrounded())
-            {
-                _animation.Play("FireJump");
-            }
             
-        }*/
-
+        }
+        
+        //method controls interaction with player, dialog options depends on how many times player approaches npc
         public void ConvoController()
         {
             switch (_playerInfo.HasKey)
@@ -132,42 +80,26 @@ namespace NPC
             }
         }
 
+        //gets player prefs
         private void OnEnable()
         {
             _encountersCount = PlayerPrefs.GetInt("FireNpcEncounters");
-            _isFree = PlayerPrefs.GetInt("IsFree") == 1 ? true : false;
+            _isFree = PlayerPrefs.GetInt("IsFree") == 1;
         }
 
+        //sets player prefs
         private void OnDisable()
         {
             PlayerPrefs.SetInt("FireNpcEncounters", _encountersCount);
             PlayerPrefs.SetInt("IsFree", _isFree ? 1 : 0);
         }
-        
-        private bool IsGrounded()
-        {
-            return Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, Vector2.down, .1f, jumpGround);
-        }
-
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            /*if (col.gameObject.CompareTag("Ramp"))
-            {
-                _animation.SetBool("Attack", false);
-                Destroy(gameObject);
-            }
-
-            if (col.gameObject.GetComponent<PlayerInfo>())
-            {
-                col.gameObject.GetComponent<Animator>().SetTrigger("HurtFromFire");
-            }*/
-        }
 
         private void OnCollisionEnter2D(Collision2D col)
         {
+            //if npc collides with ramp object then is destroyed
             if (col.gameObject.CompareTag("Ramp"))
             {
-                _animation.SetBool("Attack", false);
+                _animation.SetBool(Attack, false);
                 Destroy(gameObject);
             }
         }

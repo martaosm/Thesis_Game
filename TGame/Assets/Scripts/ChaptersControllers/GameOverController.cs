@@ -1,34 +1,42 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameOverController : MonoBehaviour
+namespace ChaptersControllers
 {
-    [SerializeField] private Button playAgainButton;
-    [SerializeField] private Button quitButton;
-
-    private void OnEnable()
+    /**
+     * Class managing game over screen
+     */
+    public class GameOverController : MonoBehaviour
     {
-        playAgainButton.onClick.AddListener(PlayAgain);
-        quitButton.onClick.AddListener(QuitGame);
-    }
+        [SerializeField] private Button playAgainButton;
+        [SerializeField] private Button quitButton;
 
-    private void PlayAgain()
-    {
-        SceneManager.LoadScene("MenuScene");
-    }
+        
+        //adding listeners to buttons
+        private void OnEnable()
+        {
+            playAgainButton.onClick.AddListener(PlayAgain);
+            quitButton.onClick.AddListener(QuitGame);
+        }
+
+        //if button clicked then game is reloaded
+        private void PlayAgain()
+        {
+            SceneManager.LoadScene("MenuScene");
+        }
     
-    private void QuitGame()
-    {
-        Application.Quit();
-    }
+        //if button clicked the player quits game
+        private void QuitGame()
+        {
+            Application.Quit();
+        }
 
-    private void OnDisable()
-    {
-        playAgainButton.onClick.RemoveAllListeners();
-        quitButton.onClick.RemoveAllListeners();
+        //removing all listeners 
+        private void OnDisable()
+        {
+            playAgainButton.onClick.RemoveAllListeners();
+            quitButton.onClick.RemoveAllListeners();
+        }
     }
 }

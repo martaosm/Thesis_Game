@@ -1,8 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class Chapter3Controller : MonoBehaviour
+namespace ChaptersControllers
 {
-    
+    /**
+     * Class checking player's statistics and then adapting environment to them in the scene 
+     */
+    public class Chapter3Controller : MonoBehaviour
+    {
+        //nothing happens here, delete later
+    }
 }

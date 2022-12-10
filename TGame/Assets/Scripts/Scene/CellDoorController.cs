@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using NPC;
 using Player;
 using TMPro;
@@ -17,11 +17,10 @@ namespace Scene
             get => _doorOpened;
             set => _doorOpened = value;
         }
-        [SerializeField] private float speed;
         [SerializeField] private GameObject cellDoor;
-        [SerializeField] private GameObject cellWall;
         [SerializeField] private TextMeshProUGUI instructionText;
         [SerializeField] private GameObject panel;
+        private static readonly int CellDoorOpened = Animator.StringToHash("CellDoorOpened");
 
 
         private void OnEnable()
@@ -32,10 +31,10 @@ namespace Scene
 
         private void Update()
         {
+            //if player uses key, cell door are opened 
             if (_usedKey)
             {
-                cellDoor.GetComponent<Animator>().SetBool("CellDoorOpened", true);
-                //cellDoor.transform.position = Vector2.MoveTowards(transform.position, cellWall.transform.position, speed);
+                cellDoor.GetComponent<Animator>().SetBool(CellDoorOpened, true);
                 cellDoor.GetComponent<Collider2D>().enabled = false;
                 _usedKey = false;
                 _doorOpened = true;
@@ -45,6 +44,7 @@ namespace Scene
 
         private void OnTriggerEnter2D(Collider2D col)
         {
+            //text with information is displayed
             if (_playerInfo.HasKey)
             {
                 instructionText.text = "Press E to use Key";
@@ -57,22 +57,31 @@ namespace Scene
 
         private void OnTriggerStay2D(Collider2D other)
         {
+            //if player is in trigger and presses then noc is let free and attacks player
             if (other.gameObject.GetComponent<PlayerInfo>() && Input.GetKey(KeyCode.E) && _playerInfo.HasKey)
             {
                 _usedKey = true;
                 _playerInfo.HasKey = false;
                 _fireNpc.IsFree = true;
-                GetComponent<Collider2D>().enabled = false;
-                instructionText.gameObject.SetActive(false);
+                StartCoroutine(InfoAfterFireAttack());
             }
         }
 
+        //method controls what comes after letting npc free, displays info about key loss and disables cell collider
+        private IEnumerator InfoAfterFireAttack()
+        {
+            instructionText.text = "You lost a key!";
+            panel.SetActive(false);
+            yield return new WaitForSeconds(1f);
+            GetComponent<Collider2D>().enabled = false;
+            instructionText.gameObject.SetActive(false);
+        }
         private void OnTriggerExit2D(Collider2D other)
         {
+            //if player has key  instruction text is active
             if (_playerInfo.HasKey)
             {
                 instructionText.gameObject.SetActive(false);
-                
             }
             panel.SetActive(false);
         }

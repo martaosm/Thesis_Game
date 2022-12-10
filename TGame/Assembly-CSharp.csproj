@@ -52,24 +52,20 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Scene\BlackoutController.cs" />
      <Compile Include="Assets\Scripts\Scene\HiddenChamberDiscovered.cs" />
      <Compile Include="Assets\Scripts\Scene\CellDoorController.cs" />
      <Compile Include="Assets\Scripts\NPC\DemonGuardController.cs" />
      <Compile Include="Assets\Scripts\ChaptersControllers\GameOverController.cs" />
      <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
      <Compile Include="Assets\Scripts\NPC\FireNpcController.cs" />
-     <Compile Include="Assets\Scripts\Scene\ReturnScript.cs" />
      <Compile Include="Assets\Scripts\Scene\FinalDoorController.cs" />
      <Compile Include="Assets\Scripts\Scene\RampController.cs" />
      <Compile Include="Assets\Scripts\NPC\EnemyController.cs" />
-     <Compile Include="Assets\Scripts\Scene\NextRoomScript.cs" />
      <Compile Include="Assets\Scripts\Scene\SceneController.cs" />
      <Compile Include="Assets\Scripts\Menu\ButtonController.cs" />
      <Compile Include="Assets\Scripts\Scene\DoNotDestroy.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
      <Compile Include="Assets\Scripts\Scene\TriggerAreaController.cs" />
-     <Compile Include="Assets\Scripts\Menu\TextSwayer.cs" />
      <Compile Include="Assets\Scripts\ChaptersControllers\Chapter1Controller.cs" />
      <Compile Include="Assets\Scripts\ChaptersControllers\FinaleController.cs" />
      <Compile Include="Assets\Scripts\ChaptersControllers\Chapter3Controller.cs" />

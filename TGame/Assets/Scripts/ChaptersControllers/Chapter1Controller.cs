@@ -4,30 +4,34 @@ using UnityEngine;
 
 namespace ChaptersControllers
 {
+    /**
+     * Class checking player's statistics and then adapting environment to them in the scene 
+     */
     public class Chapter1Controller : MonoBehaviour
     {
         private bool _isFireFree;
         [SerializeField] private GameObject cellDoor;
-        [SerializeField] private GameObject cellWall;
-        [SerializeField] private float speed;
+        private static readonly int CellDoorOpened = Animator.StringToHash("CellDoorOpened");
+
         private void OnEnable()
         {
-            _isFireFree = PlayerPrefs.GetInt("IsFree") == 1 ? true : false;
+            //if player let FireNpc free then cell door have to be opened all the time 
+            _isFireFree = PlayerPrefs.GetInt("IsFree") == 1;
             if (_isFireFree)
             {
                 FindObjectOfType<FireNpcController>().gameObject.SetActive(false);
-                cellDoor.GetComponent<Animator>().SetBool("CellDoorOpened", true);//transform.position = Vector2.MoveTowards(transform.position, cellWall.transform.position, speed);
+                cellDoor.GetComponent<Animator>().SetBool(CellDoorOpened, true);
                 FindObjectOfType<CellDoorController>().gameObject.GetComponent<Collider2D>().enabled = false;
                 cellDoor.GetComponent<Collider2D>().enabled = false;
             }
 
+            //if player find mark object then skeletons are not attacking the player
             if (PlayerPrefs.GetInt("hasMark") == 1)
             {
                 var skeletons = FindObjectsOfType<EnemyController>();
                 foreach(var skeleton in skeletons)
                 {
                     skeleton.gameObject.GetComponent<Collider2D>().isTrigger = true;
-                    //skeleton.gameObject.GetComponentInChildren<Collider2D>().enabled = false;
                 }
             }
         }

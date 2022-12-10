@@ -1,17 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DoNotDestroy : MonoBehaviour
+namespace Scene
 {
-    private void Awake()
+    /**
+     * Class to not destroy object that controls background music
+     */
+    public class DoNotDestroy : MonoBehaviour
     {
-        GameObject[] musicObj = GameObject.FindGameObjectsWithTag("GameMusic");
-        if (musicObj.Length > 1)
+        //music plays smoothly during whole game, when track ends it starts to play again
+        private void Awake()
         {
-            Destroy(this.gameObject);
+            var musicObj = GameObject.FindGameObjectsWithTag("GameMusic");
+            if (musicObj.Length > 1)
+            {
+                Destroy(this.gameObject);
+            }
+            DontDestroyOnLoad(this.gameObject);
         }
-        DontDestroyOnLoad(this.gameObject);
     }
 }

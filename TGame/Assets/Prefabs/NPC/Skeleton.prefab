@@ -553,7 +553,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b50addc28becda34db70681e6ed462c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _slider: {fileID: 3325057370222634363}
+  slider: {fileID: 3325057370222634363}
   player: {fileID: 6222014982782767933, guid: 838852caf61b7bd45b13e22d6bbcc2e8, type: 3}
   hitBox: {fileID: 2865053205426945190}
   playerLayer:

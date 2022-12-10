@@ -1,5 +1,5 @@
-using System;
 using System.Collections;
+using Camera;
 using Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,7 +17,8 @@ namespace Scene
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button startOverButton;
         [SerializeField] private Button quitButton;
-        
+
+        //adds listeners to buttons
         private void OnEnable()
         {
             resumeButton.onClick.AddListener(ResumeGame);
@@ -32,12 +33,15 @@ namespace Scene
 
         private void Update()
         {
+            //if player wants to move to next chamber, then they have to step into trigger near the exit, when player touches a trigger
+            //they start running without input in the direction of the exit 
             if (_nextChamber)
             {
                 player.GetComponent<Rigidbody2D>().velocity =
                     new Vector2(_dirX * 10, player.GetComponent<Rigidbody2D>().velocity.y);
             }
             
+            //when player presses O pause screen is activated
             if(Input.GetKeyDown(KeyCode.O))
             {
                 Time.timeScale = 0;
@@ -47,6 +51,7 @@ namespace Scene
 
         private void OnTriggerEnter2D(Collider2D col)
         {
+            //when player enters trigger camera stops moving along with the player and coroutine starts
             if (col.gameObject.GetComponent<PlayerInfo>())
             {
                 player.GetComponent<PlayerInfo>().InputEnabled = false;
@@ -65,6 +70,7 @@ namespace Scene
             }
         }
 
+        //depending on direction in which player runs, scene changes to the next or previous one
         private IEnumerator MoveToNextChamber()
         {
             yield return new WaitForSeconds(3f);
@@ -80,12 +86,14 @@ namespace Scene
             }
         }
 
+        //after pressing resume button game continues
         private void ResumeGame()
         {
             pauseCanvas.SetActive(false);
             Time.timeScale = 1;
         }
 
+        //after pressing start over button game is reloaded
         private void StarOver()
         {
             pauseCanvas.SetActive(false);
@@ -93,6 +101,7 @@ namespace Scene
             SceneManager.LoadScene("MenuScene");
         }
 
+        //after pressing quit button game is turned off
         private void QuitGame()
         {
             pauseCanvas.SetActive(false);

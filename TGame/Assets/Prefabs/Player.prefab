@@ -460,28 +460,16 @@ MonoBehaviour:
     m_Bits: 128
   wallCheckPoint: {fileID: 6222014981927306042}
   wallCheckSize: {x: 2, y: 1}
-  _jumpForce: 17
-  _speed: 10
+  jumpForce: 17
+  speed: 10
   jumpGround:
     serializedVersion: 2
     m_Bits: 64
-  fireNpcLayer:
-    serializedVersion: 2
-    m_Bits: 0
   attackPoint: {fileID: 7248544420720637}
   attackRange: 2
   enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
-  enemyDemonGuard:
-    serializedVersion: 2
-    m_Bits: 2048
-  enemyCandyGiver:
-    serializedVersion: 2
-    m_Bits: 0
-  kleptoNpc:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!114 &6222014982782767908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,9 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb4d1332a174be340a161c1065206072, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 100
-  _hasKey: 1
-  _hasMark: 0
+  maxHealth: 0
   slider: {fileID: 1989245890036021194}
   rightSpawnPoint: {fileID: 0}
   leftSpawnPoint: {fileID: 0}

@@ -7,13 +7,21 @@ using UnityEngine.UI;
 
 namespace NPC
 {
+    /**
+     * Class controls fire npc behaviour in the scene "Finale"
+     */
     public class KleptomaniacController : MonoBehaviour
     {
-        public float _health = 25f;
+        private float _health = 25f;
+        public float Health
+        {
+            get => _health;
+            set => _health = value;
+        }
+        private bool _isDead;
         private Animator _animator;
         private Collider2D _collider;
         private Rigidbody2D _rb;
-        private bool _isDead;
         [SerializeField] private Vector2 center;
         [SerializeField] private Slider slider;
         [SerializeField] private GameObject player;
@@ -29,6 +37,7 @@ namespace NPC
 
         private void Update()
         {
+            //health bar control
             if (_health <= 0)
             {
                 slider.gameObject.SetActive(false);
@@ -40,6 +49,7 @@ namespace NPC
             
             if (!_isDead)
             {
+                //condition to face a player
                 if (player.transform.position.x > gameObject.transform.position.x)
                 {
                     gameObject.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
@@ -49,6 +59,7 @@ namespace NPC
                     gameObject.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
                 }
 
+                //when player is above certain height npc walks instead of being in attack mode
                 if (!_animator.GetBool(Attack) &&
                     Math.Abs(player.transform.position.x - transform.position.x) > 1.5f &&
                     player.transform.position.y >= 9.34f)
@@ -81,6 +92,7 @@ namespace NPC
             PlayerMovement.OnKleptoDeath -= AfterDeath;
         }
     
+        //npc is in attack mode and hits player
         private void FireAttack()
         {
             if (!_isDead)
@@ -93,12 +105,14 @@ namespace NPC
                 transform.position = position;
             }
         }
-
+        
+        //sets animation to "Walk"
         private void IdleState()
         {
             _animator.SetBool(Attack, false);
         }
 
+        //sets animation to "Walk"
         private void BackToCenter()
         {
             _animator.SetBool(Attack, false);
@@ -108,6 +122,7 @@ namespace NPC
             transform.position = position;
         }
 
+        //when player defeats npc, this method turns it into key
         private void AfterDeath()
         {
             gameObject.tag = "Key";
@@ -117,12 +132,14 @@ namespace NPC
             StartCoroutine(ChangeSprite());
         }
 
+        //changes npc into a key sprite
         private IEnumerator ChangeSprite()
         {
             yield return new WaitForSeconds(1f);
             _animator.Play("KeyAnimationKlepto");
         }
 
+        //when npc hits player, npc bounces off of player with force
         private void OnCollisionEnter2D(Collision2D col)
         {
             if (col.gameObject.GetComponent<PlayerInfo>())

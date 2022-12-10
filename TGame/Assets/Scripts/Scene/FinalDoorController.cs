@@ -1,4 +1,3 @@
-using System;
 using Player;
 using TMPro;
 using UnityEngine;
@@ -12,8 +11,8 @@ namespace Scene
         private Animator _animator;
         [SerializeField] private TextMeshProUGUI instructionsText;
         private static readonly int DoorOpened = Animator.StringToHash("DoorOpened");
-
-
+        
+        //player prefs if the door was opened already
         private void OnEnable()
         {
             _doorOpened = PlayerPrefs.GetInt("FinalDoorOpened") == 1;
@@ -21,6 +20,7 @@ namespace Scene
 
         private void Start()
         {
+            //if the door was opened then when player comes back to it from different scene door is still open
             _animator = GetComponent<Animator>();
             if (_doorOpened)
             {
@@ -30,11 +30,12 @@ namespace Scene
 
         private void OnTriggerEnter2D(Collider2D col)
         {
+            //instruction text is activated when player approaches door
             if (col.TryGetComponent(out PlayerInfo playerInfo))
             {
                 instructionsText.gameObject.SetActive(true);
             }
-            if (!playerInfo._hasKey)
+            if (!playerInfo.HasKey)
             {
                 instructionsText.text = "You need a key to open it";
             }
@@ -44,8 +45,10 @@ namespace Scene
         {
             if (other.TryGetComponent(out PlayerInfo playerInfo))
             {
-                if (playerInfo._hasKey && !_doorOpened)
+                //if player has key then they can open final door
+                if (playerInfo.HasKey && !_doorOpened)
                 {
+                    //if player presses E then animation of opening door is played
                     instructionsText.text = "Press E to open the door";
                     if (Input.GetKey(KeyCode.E))
                     {
@@ -57,6 +60,7 @@ namespace Scene
 
                 if (_doorOpened)
                 {
+                    //if door is open and player presses E, game ends
                     instructionsText.text = "Press E to pass through";
                     if (Input.GetKeyDown(KeyCode.E))
                     {
@@ -69,9 +73,10 @@ namespace Scene
 
         private void OnTriggerExit2D(Collider2D other)
         {
+            //if player walks away from door instruction text is deactivated
             if (other.TryGetComponent(out PlayerInfo playerInfo))
             {
-                if (playerInfo._hasKey)
+                if (playerInfo.HasKey)
                 {
                     instructionsText.gameObject.SetActive(false);
                 }

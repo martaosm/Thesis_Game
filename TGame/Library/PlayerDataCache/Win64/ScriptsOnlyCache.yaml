@@ -1,31 +1,30 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
-    - CameraController
-    - Chapter3Controller
+    - Camera.CameraController
     - ChaptersControllers.Chapter1Controller
     - ChaptersControllers.Chapter2Controller
+    - ChaptersControllers.Chapter3Controller
     - ChaptersControllers.FinaleController
-    - DemonGuardFinaleController
-    - DoNotDestroy
-    - GameOverController
-    - HiddenChamberDiscovered
+    - ChaptersControllers.GameOverController
+    - ChaptersControllers.PrologueController
     - Menu.ButtonController
     - Menu.MenuController
     - NPC.CandyGiverController
     - NPC.DemonGuardController
+    - NPC.DemonGuardFinaleController
     - NPC.EnemyController
     - NPC.FireNpcController
     - NPC.KleptomaniacController
     - Player.PlayerInfo
     - Player.PlayerMovement
-    - PrologueController
-    - RampController
     - Scene.CellDoorController
+    - Scene.DoNotDestroy
     - Scene.FinalDoorController
+    - Scene.HiddenChamberDiscovered
+    - Scene.RampController
     - Scene.SceneController
     - Scene.TriggerAreaController
-    - TextSwayer
     Unity.2D.Animation.Editor.dll:
     - UnityEditor.U2D.Animation.BoneGizmo
     Unity.2D.IK.Editor.dll:
@@ -59,6 +58,7 @@ ScriptsOnlyBuild:
     - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.StateMachineNode
     - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
@@ -142,9 +142,9 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 4346}
     - Class: 114
-      Script: {instanceID: 4736}
+      Script: {instanceID: 4734}
     - Class: 114
-      Script: {instanceID: 5144}
+      Script: {instanceID: 5142}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -237,9 +237,9 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 4346}
     - Class: 114
-      Script: {instanceID: 5144}
+      Script: {instanceID: 5142}
     - Class: 114
-      Script: {instanceID: 5860}
+      Script: {instanceID: 5858}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 122
@@ -328,11 +328,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 4346}
     - Class: 114
-      Script: {instanceID: 4788}
+      Script: {instanceID: 4786}
     - Class: 114
-      Script: {instanceID: 5144}
+      Script: {instanceID: 5142}
     - Class: 114
-      Script: {instanceID: 5360}
+      Script: {instanceID: 5358}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -482,13 +482,13 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 4378}
     - Class: 114
-      Script: {instanceID: 4782}
+      Script: {instanceID: 4780}
     - Class: 114
-      Script: {instanceID: 5030}
+      Script: {instanceID: 5028}
     - Class: 114
-      Script: {instanceID: 5144}
+      Script: {instanceID: 5142}
     - Class: 114
-      Script: {instanceID: 5594}
+      Script: {instanceID: 5592}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -626,13 +626,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 4074}
     - Class: 114
-      Script: {instanceID: 4712}
+      Script: {instanceID: 4924}
     - Class: 114
-      Script: {instanceID: 4926}
+      Script: {instanceID: 5326}
     - Class: 114
-      Script: {instanceID: 5328}
-    - Class: 114
-      Script: {instanceID: 5916}
+      Script: {instanceID: 5914}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -713,9 +711,9 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 4346}
     - Class: 114
-      Script: {instanceID: 5144}
+      Script: {instanceID: 5142}
     - Class: 114
-      Script: {instanceID: 5618}
+      Script: {instanceID: 5616}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -823,19 +821,13 @@ ScriptsOnlyBuild:
     className: TMP_FontAsset
   - hash:
       serializedVersion: 2
-      Hash: 62ee01f51b7f1d8d7c7009faab9a5189
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: BlackoutController
-  - hash:
-      serializedVersion: 2
       Hash: 8ff0ee9a61d76c23b19757bf33e38ccf
     assemblyName: Assembly-CSharp.dll
-    namespaceName: 
+    namespaceName: Scene
     className: HiddenChamberDiscovered
   - hash:
       serializedVersion: 2
-      Hash: 21e51846072c851d6060da74f787b475
+      Hash: dfc0819bb72a833c331452963c170355
     assemblyName: Assembly-CSharp.dll
     namespaceName: Scene
     className: CellDoorController
@@ -891,7 +883,7 @@ ScriptsOnlyBuild:
       serializedVersion: 2
       Hash: 75d390b019efbd5fd03e5f2b26833fc0
     assemblyName: Assembly-CSharp.dll
-    namespaceName: 
+    namespaceName: ChaptersControllers
     className: GameOverController
   - hash:
       serializedVersion: 2
@@ -903,7 +895,7 @@ ScriptsOnlyBuild:
       serializedVersion: 2
       Hash: 65b3a3b9a7779d539ec75a3ceddebdba
     assemblyName: Assembly-CSharp.dll
-    namespaceName: 
+    namespaceName: Camera
     className: CameraController
   - hash:
       serializedVersion: 2
@@ -985,16 +977,10 @@ ScriptsOnlyBuild:
     className: TestResultRendererCallback
   - hash:
       serializedVersion: 2
-      Hash: 9cb35c2e56de2760306e6f4abda1d994
+      Hash: aa622e341face9c5a87e446d6704a772
     assemblyName: Assembly-CSharp.dll
     namespaceName: NPC
     className: FireNpcController
-  - hash:
-      serializedVersion: 2
-      Hash: 83e769eee07fc231384c812eedbb8224
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: ReturnScript
   - hash:
       serializedVersion: 2
       Hash: 748dd2a2a28da4e618912da5ac45684b
@@ -1053,7 +1039,7 @@ ScriptsOnlyBuild:
       serializedVersion: 2
       Hash: e700e207de82a214449ad0a3eadc18b8
     assemblyName: Assembly-CSharp.dll
-    namespaceName: 
+    namespaceName: Scene
     className: RampController
   - hash:
       serializedVersion: 2
@@ -1063,7 +1049,7 @@ ScriptsOnlyBuild:
     className: TextContainer
   - hash:
       serializedVersion: 2
-      Hash: cbbc71ecfd94d39be6ed171357ffe45f
+      Hash: 807ba12db09c11ef664c5857c339b905
     assemblyName: Assembly-CSharp.dll
     namespaceName: NPC
     className: EnemyController
@@ -1079,12 +1065,6 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: Outline
-  - hash:
-      serializedVersion: 2
-      Hash: 83e769eee07fc231384c812eedbb8224
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: NextRoomScript
   - hash:
       serializedVersion: 2
       Hash: 3b6491538adf9d458a666247c7533e65
@@ -1125,7 +1105,7 @@ ScriptsOnlyBuild:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
-    namespaceName: 
+    namespaceName: Scene
     className: DoNotDestroy
   - hash:
       serializedVersion: 2
@@ -1183,7 +1163,7 @@ ScriptsOnlyBuild:
     className: SpriteLibrary
   - hash:
       serializedVersion: 2
-      Hash: d8eadd8293e5fba29640eb477cfd1482
+      Hash: ac1d775195524c7295f57fcc6a6cccab
     assemblyName: Assembly-CSharp.dll
     namespaceName: Player
     className: PlayerMovement
@@ -1195,7 +1175,7 @@ ScriptsOnlyBuild:
     className: Dropdown
   - hash:
       serializedVersion: 2
-      Hash: 5687ef4b05979d55a25e36e2d7ac28a3
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: Scene
     className: TriggerAreaController
@@ -1237,19 +1217,13 @@ ScriptsOnlyBuild:
     className: SpriteResolver
   - hash:
       serializedVersion: 2
-      Hash: 459b50185a167c1d210a783633c72823
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: TextSwayer
-  - hash:
-      serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: ControlTrack
   - hash:
       serializedVersion: 2
-      Hash: 79b32bf566809ed67f07d2a89d24dd14
+      Hash: b256ab098f3db4d46832e8eaeda6ad84
     assemblyName: Assembly-CSharp.dll
     namespaceName: ChaptersControllers
     className: Chapter1Controller
@@ -1267,7 +1241,7 @@ ScriptsOnlyBuild:
     className: SignalReceiver
   - hash:
       serializedVersion: 2
-      Hash: d988be6db01a5acda25653f834ac3bd8
+      Hash: 997a336df9a0aab7cd363c3415c0ea88
     assemblyName: Assembly-CSharp.dll
     namespaceName: ChaptersControllers
     className: FinaleController
@@ -1281,7 +1255,7 @@ ScriptsOnlyBuild:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
-    namespaceName: 
+    namespaceName: ChaptersControllers
     className: Chapter3Controller
   - hash:
       serializedVersion: 2
@@ -1315,7 +1289,7 @@ ScriptsOnlyBuild:
     className: SpriteSkinEntity
   - hash:
       serializedVersion: 2
-      Hash: 426f4cba5df7dd55ae7fbc017ecbefee
+      Hash: c8803e012227bf9269bf7ad987720a94
     assemblyName: Assembly-CSharp.dll
     namespaceName: NPC
     className: KleptomaniacController
@@ -1327,7 +1301,7 @@ ScriptsOnlyBuild:
     className: SpriteLibraryAsset
   - hash:
       serializedVersion: 2
-      Hash: e51a7cf3ab099f5ea41487d5bb0406b3
+      Hash: 95ce289401b193422392e01904c1f8fe
     assemblyName: Assembly-CSharp.dll
     namespaceName: Player
     className: PlayerInfo
@@ -1351,7 +1325,7 @@ ScriptsOnlyBuild:
     className: TMP_SpriteAsset
   - hash:
       serializedVersion: 2
-      Hash: 66f01300335596c0e4f249638ffddacc
+      Hash: 7ff4e6c936bae5b3f72e7eccf9122f7e
     assemblyName: Assembly-CSharp.dll
     namespaceName: NPC
     className: CandyGiverController
@@ -1365,7 +1339,7 @@ ScriptsOnlyBuild:
       serializedVersion: 2
       Hash: 72891ef441c7df990a177a3822154294
     assemblyName: Assembly-CSharp.dll
-    namespaceName: 
+    namespaceName: NPC
     className: DemonGuardFinaleController
   - hash:
       serializedVersion: 2
@@ -1375,9 +1349,9 @@ ScriptsOnlyBuild:
     className: BufferManager
   - hash:
       serializedVersion: 2
-      Hash: 71002abc8d0d58da535b85e2d917da22
+      Hash: 58b698e5ef37b3937d8dc8d85659f48a
     assemblyName: Assembly-CSharp.dll
-    namespaceName: 
+    namespaceName: ChaptersControllers
     className: PrologueController
   - hash:
       serializedVersion: 2
@@ -1411,7 +1385,7 @@ ScriptsOnlyBuild:
     className: FabrikSolver2D
   - hash:
       serializedVersion: 2
-      Hash: 0f18cb94b276e9adcf635a927a7d5c3b
+      Hash: fbd150f7be4e3451a513a80aa398cdff
     assemblyName: Assembly-CSharp.dll
     namespaceName: ChaptersControllers
     className: Chapter2Controller

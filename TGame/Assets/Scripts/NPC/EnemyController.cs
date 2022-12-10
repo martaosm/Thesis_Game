@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Player;
 using UnityEngine;
@@ -18,7 +17,7 @@ namespace NPC
         private PlayerInfo _playerInfo;
         private Collider2D _collider2D;
         private bool _isDefeated;
-        [SerializeField] private Slider _slider;
+        [SerializeField] private Slider slider;
         [SerializeField] private GameObject player;
         [SerializeField] private GameObject hitBox;
         [SerializeField] private LayerMask playerLayer;
@@ -41,6 +40,8 @@ namespace NPC
             _animator = GetComponent<Animator>();
             _playerInfo = FindObjectOfType<PlayerInfo>();
             _collider2D = GetComponent<Collider2D>();
+            
+            //if player has mark then skeletons are ignoring them
             if (_playerInfo.HasMark)
             {
                 _collider2D.isTrigger = true;
@@ -50,25 +51,27 @@ namespace NPC
     
         private void Update()
         {
+            //collider is set as a trigger if player has mark
             if (_playerInfo.HasMark)
             {
                 _collider2D.isTrigger = true;
                 hitBox.SetActive(false);
             }
             
+            //controls health bar
             if (_life <= 0)
             {
-                _slider.gameObject.SetActive(false);
+                slider.gameObject.SetActive(false);
                 hitBox.SetActive(false);
                 playerCheckPoint.gameObject.SetActive(false);
-                //_collider2D.enabled = false;
             }
             else
             {
-                _slider.value = _life;
+                slider.value = _life;
             }
             
-            if (!_playerInfo.HasMark && _playerInfo._health > 0)
+            //if player is in reach skeleton will attack them
+            if (!_playerInfo.HasMark && _playerInfo.Health > 0)//_health
             {
                 if (Physics2D.OverlapCircleAll(playerCheckPoint.position, playerCheckSize, playerLayer).Length > 0 &&
                     _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && !_isDefeated)
@@ -81,6 +84,7 @@ namespace NPC
                 } 
             }
 
+            //npc faces player, but only if life is greater than 0
             if (_life > 0)
             {
                 if (player.transform.position.x > gameObject.transform.position.x)
@@ -94,12 +98,14 @@ namespace NPC
             }
         }
 
+        //method sets collider as trigger and turns off hitBox
         private void PlayerHasMark()
         {
             _collider2D.isTrigger = true;
             hitBox.SetActive(false);
         }
         
+        //after defeat skeleton is turned into heart that player can gain life from
         public IEnumerator DeadBodyDestroy()
         {
             _isDefeated = true;

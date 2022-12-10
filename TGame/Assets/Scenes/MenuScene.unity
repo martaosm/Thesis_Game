@@ -1450,7 +1450,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -132, y: 5}
+  m_AnchoredPosition: {x: -135.9, y: 5}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &835494109
@@ -1900,7 +1900,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 125, y: 5}
+  m_AnchoredPosition: {x: 142.2, y: 5}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1087587653
@@ -2007,8 +2007,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 6.74415, y: 0}
+  m_SizeDelta: {x: 13.4883, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1110856665
 MonoBehaviour:
@@ -2030,9 +2030,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'OPTIONS
-
-'
+  m_text: CONTROLS
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ec169f5141629de4797106a1f1808ace, type: 2}
   m_sharedMaterial: {fileID: -9159063722331841002, guid: ec169f5141629de4797106a1f1808ace, type: 2}
@@ -3453,7 +3451,6 @@ GameObject:
   - component: {fileID: 2037153580}
   - component: {fileID: 2037153583}
   - component: {fileID: 2037153582}
-  - component: {fileID: 2037153581}
   m_Layer: 5
   m_Name: GameTitle
   m_TagString: Untagged
@@ -3480,19 +3477,6 @@ RectTransform:
   m_AnchoredPosition: {x: -136, y: -64}
   m_SizeDelta: {x: 97.7008, y: 84.2834}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2037153581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2037153579}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a24d165dcaba3543b9a382fd22e842e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 25
 --- !u!114 &2037153582
 MonoBehaviour:
   m_ObjectHideFlags: 0

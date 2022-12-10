@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 namespace NPC
 {
+    /**
+     * Controls behaviour of npc in Chapter3 scene
+     */
     public class CandyGiverController : MonoBehaviour
     {
         private float _life = 20f;
@@ -17,14 +20,15 @@ namespace NPC
         }
 
         private bool _candyGiverDealt;
+        private bool _guardDone;
+        private bool _isGuardAnEnemy;
         private Animator _animator;
         private PlayerInfo _playerInfo;
         private bool _isPlayerAnEnemy;
         private bool _answerGiven;
         private String _answer = "";
-        [SerializeField] private Slider _slider;
+        [SerializeField] private Slider slider;
         [SerializeField] private GameObject player;
-        [SerializeField] private GameObject hitBox;
         [SerializeField] private GameObject panel;
         [SerializeField] private TextMeshProUGUI panelText;
         [SerializeField] private TextMeshProUGUI instructions;
@@ -32,7 +36,6 @@ namespace NPC
         [SerializeField] private Collider2D trigger;
         [SerializeField] private GameObject closedChamber;
         private static readonly int Attack = Animator.StringToHash("Attack");
-        //private static readonly int Death = Animator.StringToHash("Death");
         private static readonly int Death0 = Animator.StringToHash("Death0");
 
         private void Start()
@@ -43,26 +46,29 @@ namespace NPC
 
         private void Update()
         {
+            //controls health bar
             if (_life <= 0)
             {
-                _slider.gameObject.SetActive(false);
+                slider.gameObject.SetActive(false);
             }
             else
             {
-                _slider.value = _life;
+                slider.value = _life;
             }
         
-            if (_playerInfo._health <= 0)
+            //stop attacking when player's health equals or is under 0
+            if (_playerInfo.Health <= 0)//_health
             {
                 _isPlayerAnEnemy = false;
             }
 
+            //starts npc "death" sequence
             if (_life <= 0)
             {
                 StartCoroutine(CandyGiverDeath());
-                //closedChamber.SetActive(false);
             }
         
+            //npc faces player all the time
             if (player.transform.position.x > gameObject.transform.position.x)
             {
                 gameObject.transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
@@ -72,6 +78,7 @@ namespace NPC
                 gameObject.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
             }
         
+            //depending on answer of the player, if "no" the player becomes an enemy, if "yes" player is given hp (it can be negative or positive)
             if (_answer != "" && _answer != "answer given")
             {
                 switch (_answer)
@@ -85,6 +92,8 @@ namespace NPC
                         break;
                 }
             }
+            
+            //before giving an answer, waiting for input from player
             if (!_answerGiven)
             {
                 if (Input.GetKey(KeyCode.Y))
@@ -101,6 +110,7 @@ namespace NPC
             }
         }
     
+        //"death" sequence, after defeat chamber is opened and npc disappears 
         private IEnumerator CandyGiverDeath()
         {
             _life++;
@@ -114,6 +124,7 @@ namespace NPC
     
         private void OnTriggerEnter2D(Collider2D col)
         {
+            //if player enters trigger text panel is activated
             if (col.gameObject.GetComponent<PlayerInfo>())
             {
                 panel.SetActive(true);
@@ -121,13 +132,42 @@ namespace NPC
                 instructions.text = "[Y] yes / [N] no";
                 instructions.gameObject.SetActive(true);
             }
-        }
 
+            //gets player prefs, needed to determine dialog option
+            _guardDone = PlayerPrefs.GetInt("DemonGuardDone") == 1;
+            _isGuardAnEnemy = PlayerPrefs.GetInt("IsGuardAnEnemy") == 1;
+        }
+        
         private void OnTriggerStay2D(Collider2D other)
         {
+            //depending on earlier actions player will gain or loose HP
             if (other.gameObject.GetComponent<PlayerInfo>())
             {
-                if (_answer == "no")
+                if (_guardDone)
+                {
+                    if (!_isGuardAnEnemy)
+                    {
+                        ActionAfterAnswer(-50, 0);
+                    }
+                    else
+                    {
+                        ActionAfterAnswer(50, 1);
+                    }
+                }
+                else if(!_guardDone)
+                {
+                    ActionAfterAnswer(-50, 0);
+                }
+                
+            }
+        }
+
+        //controls actions after giving an answer, "no" - attacks player, "yes" - player gains or looses HP
+        private void ActionAfterAnswer(int hp, int dialog)
+        {
+            switch (_answer)
+            {
+                case "no":
                 {
                     collider.enabled = true;
                     trigger.enabled = false;
@@ -141,15 +181,17 @@ namespace NPC
                             _animator.SetTrigger(Attack);
                         }
                     }
+
+                    break;
                 }
-                if (_answer == "yes")
-                {
-                    StartCoroutine(PlayerTakesCandy());
-                }
+                case "yes":
+                    StartCoroutine(PlayerTakesCandy(hp, dialog));
+                    break;
             }
         }
         private void OnTriggerExit2D(Collider2D other)
         {
+            //text panel is deactivated 
             if (other.gameObject.GetComponent<PlayerInfo>())
             {
                 panel.SetActive(false);
@@ -157,12 +199,14 @@ namespace NPC
             }
         }
     
-        IEnumerator PlayerTakesCandy()
+        //if answer was "yes" then player gains or looses HP
+        private IEnumerator PlayerTakesCandy(int hp, int dialog)
         {
+            const string s1 = "You like it? That kind of candy will increase your health by 50 HP. Thank you for tasting it! Now I gotta go, bye!";
+            const string s2 = "Haha. It was a trap! Now you lost 50 HP!MUHAHAHAHAHA";
             instructions.gameObject.SetActive(false);
-            _playerInfo._health += 50;
-            panelText.text =
-                "You like it? That kind of candy will increase your health by 50 HP. Thank you for tasting it! Now I gotta go, bye!";
+            _playerInfo.Health += hp;//_health
+            panelText.text = dialog == 1 ? s1 : s2;
             yield return new WaitForSeconds(4f);
             _animator.SetBool(Death0, true);
             panel.SetActive(false);
@@ -171,6 +215,7 @@ namespace NPC
             gameObject.SetActive(false);
         }
 
+        //if player interacted with nps then later npc is not active in the scene
         private void OnEnable()
         {
             _candyGiverDealt = PlayerPrefs.GetInt("CandyGiverDealt") == 1;

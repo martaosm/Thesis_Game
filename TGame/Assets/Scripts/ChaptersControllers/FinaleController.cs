@@ -40,7 +40,9 @@ namespace ChaptersControllers
             }
             
             //if condition is met, then key position is generated in this scene
-            if (PlayerPrefs.GetInt("keyPosition") == 2 && PlayerPrefs.GetInt("hasKey") == 0)
+            if (PlayerPrefs.GetInt("keyPosition") == 2 && PlayerPrefs.GetInt("hasKey") == 0 
+                                                       && !(PlayerPrefs.GetInt("hasKey") == 0 && PlayerPrefs.GetInt("IsFree") == 1 
+                                                            || PlayerPrefs.GetInt("hasKey") == 1 && PlayerPrefs.GetInt("IsFree") == 0))
             {
                 var x = Random.Range(56, 103);
                 var y = Random.Range(10, 34);

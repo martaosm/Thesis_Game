@@ -11018,6 +11018,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1192287082}
     - target: {fileID: 8574390157568650579, guid: fd19892cb34a9b4418a212a9629e8815, type: 3}
+      propertyPath: slider
+      value: 
+      objectReference: {fileID: 707217861}
+    - target: {fileID: 8574390157568650579, guid: fd19892cb34a9b4418a212a9629e8815, type: 3}
       propertyPath: _slider
       value: 
       objectReference: {fileID: 707217861}
@@ -13722,7 +13726,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7063272547594196392, guid: f5c6c6f3cbb19fc49844564325775b23, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -20
+      value: -30
       objectReference: {fileID: 0}
     - target: {fileID: 7063272547594196392, guid: f5c6c6f3cbb19fc49844564325775b23, type: 3}
       propertyPath: m_LocalRotation.w

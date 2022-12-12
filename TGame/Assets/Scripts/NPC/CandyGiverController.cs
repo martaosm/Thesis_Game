@@ -26,6 +26,7 @@ namespace NPC
         private PlayerInfo _playerInfo;
         private bool _isPlayerAnEnemy;
         private bool _answerGiven;
+        private bool _actionAfterAns = false;
         private String _answer = "";
         [SerializeField] private Slider slider;
         [SerializeField] private GameObject player;
@@ -143,22 +144,28 @@ namespace NPC
             //depending on earlier actions player will gain or loose HP
             if (other.gameObject.GetComponent<PlayerInfo>())
             {
-                if (_guardDone)
+                if (_answerGiven)
                 {
-                    if (!_isGuardAnEnemy)
+                    if (_guardDone)
+                    {
+                        if (!_isGuardAnEnemy && !_actionAfterAns)
+                        {
+                            ActionAfterAnswer(-50, 0);
+                            _actionAfterAns = true;
+                        }
+
+                        if (_isGuardAnEnemy && !_actionAfterAns)
+                        {
+                            ActionAfterAnswer(50, 1);
+                            _actionAfterAns = true;
+                        }
+                    }
+                    else if (!_guardDone && !_actionAfterAns)
                     {
                         ActionAfterAnswer(-50, 0);
-                    }
-                    else
-                    {
-                        ActionAfterAnswer(50, 1);
+                        _actionAfterAns = true;
                     }
                 }
-                else if(!_guardDone)
-                {
-                    ActionAfterAnswer(-50, 0);
-                }
-                
             }
         }
 

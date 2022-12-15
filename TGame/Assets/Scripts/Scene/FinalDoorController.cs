@@ -76,9 +76,12 @@ namespace Scene
             //if player walks away from door instruction text is deactivated
             if (other.TryGetComponent(out PlayerInfo playerInfo))
             {
-                if (playerInfo.HasKey)
+                switch (playerInfo.HasKey)
                 {
-                    instructionsText.gameObject.SetActive(false);
+                    case true:
+                    case false:
+                        instructionsText.gameObject.SetActive(false);
+                        break;
                 }
             }
         }

@@ -79,6 +79,8 @@ namespace Scene
                 switch (playerInfo.HasKey)
                 {
                     case true:
+                        instructionsText.gameObject.SetActive(false);
+                        break;
                     case false:
                         instructionsText.gameObject.SetActive(false);
                         break;

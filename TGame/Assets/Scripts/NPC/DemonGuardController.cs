@@ -175,7 +175,8 @@ namespace NPC
         private void OnTriggerEnter2D(Collider2D col)
         {
             //text panel is set active, depending on player's health the method decides on giving them a clue
-            if (col.gameObject.GetComponent<PlayerInfo>() && !_answerGiven)
+            if (col.gameObject.GetComponent<PlayerInfo>() 
+                && !_answerGiven)
             {
                 _randomConvo = _playerInfo.Health < _playerInfo.maxHealth/2 ? 0 : 1;//_health
                 _guardEncountersCount++;
@@ -225,7 +226,6 @@ namespace NPC
         {
             PlayerPrefs.SetInt("GuardEncounters", _guardEncountersCount);
             PlayerPrefs.SetInt("IsGuardAnEnemy", _isGuardAnEnemy ? 1 : 0);
-
         }
     }
 }

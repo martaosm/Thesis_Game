@@ -197,7 +197,6 @@ namespace Player
                     }
                 }
             }
-            
         }
 
         //attack execution

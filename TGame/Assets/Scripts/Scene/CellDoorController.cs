@@ -58,7 +58,9 @@ namespace Scene
         private void OnTriggerStay2D(Collider2D other)
         {
             //if player is in trigger and presses then noc is let free and attacks player
-            if (other.gameObject.GetComponent<PlayerInfo>() && Input.GetKey(KeyCode.E) && _playerInfo.HasKey)
+            if (other.gameObject.GetComponent<PlayerInfo>() 
+                && Input.GetKey(KeyCode.E) 
+                && _playerInfo.HasKey)
             {
                 _usedKey = true;
                 _playerInfo.HasKey = false;

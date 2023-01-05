@@ -111,7 +111,9 @@ namespace NPC
             }
         }
     
-        //"death" sequence, after defeat chamber is opened and npc disappears 
+        /**
+         * "death" sequence, after defeat chamber is opened and npc disappears 
+         */
         private IEnumerator CandyGiverDeath()
         {
             _life++;
@@ -169,7 +171,9 @@ namespace NPC
             }
         }
 
-        //controls actions after giving an answer, "no" - attacks player, "yes" - player gains or looses HP
+        /**
+         * controls actions after giving an answer, "no" - attacks player, "yes" - player gains or looses HP
+         */
         private void ActionAfterAnswer(int hp, int dialog)
         {
             switch (_answer)
@@ -206,7 +210,9 @@ namespace NPC
             }
         }
     
-        //if answer was "yes" then player gains or looses HP
+        /**
+         * if answer was "yes" then player gains or looses HP
+         */
         private IEnumerator PlayerTakesCandy(int hp, int dialog)
         {
             const string s1 = "You like it? That kind of candy will increase your health by 50 HP. Thank you for tasting it! Now I gotta go, bye!";
@@ -222,7 +228,9 @@ namespace NPC
             gameObject.SetActive(false);
         }
 
-        //if player interacted with nps then later npc is not active in the scene
+        /**
+         * if player interacted with nps then later npc is not active in the scene
+         */
         private void OnEnable()
         {
             _candyGiverDealt = PlayerPrefs.GetInt("CandyGiverDealt") == 1;

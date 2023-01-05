@@ -50,7 +50,9 @@ namespace Player
         private static readonly int Crouch = Animator.StringToHash("Crouch");
         private static readonly int Hurt = Animator.StringToHash("Hurt");
 
-        //enum for movement state, determines what motion player is currently doing
+        /**
+         * enum for movement state, determines what motion player is currently doing
+         */
         private enum MovementState
         {
             Idle,
@@ -102,12 +104,15 @@ namespace Player
             if (_playerInfo.Health <= 0)
             {
                 _animation.Play("PlayerDeath");
+                _isPlayerCrouching = true;
                 StartCoroutine(ChangeToGameOverScene());
                 _playerInfo.Health = 1;
             }
         }
 
-        //depends on enum, method changes animation, method also flips player's sprite depending on Horizontal input
+        /**
+         * depends on enum, method changes animation, method also flips player's sprite depending on Horizontal input
+         */
         private void UpdateAnimation()
         {
             if (_dirX > 0f )
@@ -178,7 +183,9 @@ namespace Player
             _animation.SetInteger(State, (int)_state);
         }
         
-        //attack sequence
+        /**
+         * attack sequence
+         */
         private void PlayerAttack(bool grounded)
         {
             //condition which makes player play one attack animation at the time, so spamming the mouse button won't make player attack even after stopping
@@ -199,7 +206,9 @@ namespace Player
             }
         }
 
-        //attack execution
+        /**
+         * attack execution
+         */
         private IEnumerator PlayerExecuteAttack()
         {
             _animation.SetTrigger(Attack);
@@ -268,7 +277,9 @@ namespace Player
             _playerInfo.IsAttacking = false;
         }
 
-        //method controls wall slide action
+        /**
+         * method controls wall slide action
+         */
         private void WallSlide()
         {
             if (_isTouchingWall && !IsGrounded() && _rb.velocity.y < -.1f)
@@ -286,21 +297,27 @@ namespace Player
             }
         }
 
-        //checks if player is grounded
+        /**
+         * checks if player is grounded
+         */
         private bool IsGrounded()
         {
             var bounds = _collider.bounds;
             return Physics2D.BoxCast(bounds.center, bounds.size, 0f, Vector2.down, .1f, jumpGround);
         }
         
-        //checks if player is touching the wall
+        /**
+         * checks if player is touching the wall
+         */
         private bool IsTouchingWall()
         {
             _isTouchingWall = Physics2D.OverlapBox(wallCheckPoint.position, wallCheckSize, 0, wallLayer);
             return _isTouchingWall;
         }
 
-        //changes scene to game over scene
+        /**
+         * changes scene to game over scene
+         */
         private IEnumerator ChangeToGameOverScene()
         {
             yield return new WaitForSeconds(1.5f);
@@ -319,7 +336,9 @@ namespace Player
             }
         }
 
-        //player takes damage if is hit by enemy, input is disabled
+        /**
+         * player takes damage if is hit by enemy, input is disabled
+         */
         private void OnCollisionEnter2D(Collision2D col)
         {
             if (col.gameObject.CompareTag("enemyWeapon"))
@@ -330,7 +349,9 @@ namespace Player
             }
         }
 
-        //after taking a hit input is enabled again
+        /**
+         * after taking a hit input is enabled again
+         */
         private void OnCollisionExit2D(Collision2D other)
         {
             if (other.gameObject.CompareTag("enemyWeapon"))
@@ -339,7 +360,9 @@ namespace Player
             }
         }
 
-        //after taking a hit input is enabled again
+        /**
+         * after taking a hit input is enabled again
+         */
         private void OnTriggerExit2D(Collider2D other)
         {
             if (other.gameObject.CompareTag("enemyWeapon"))
@@ -348,7 +371,9 @@ namespace Player
             }
         }
 
-        //draws shapes on player, help for programmer
+        /**
+         * draws shapes on player, help for programmer
+         */
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.blue;
@@ -357,7 +382,9 @@ namespace Player
             Gizmos.DrawSphere(attackPoint.position, attackRange);
         }
 
-        //changes enemy color for some period if enemy is hit by player
+        /**
+         * changes enemy color for some period if enemy is hit by player
+         */
         private IEnumerator ChangeEnemyColorWhenHit(GameObject enemy)
         {
             enemy.GetComponent<SpriteRenderer>().color = new Color(29f, 0f, 0f, 255); 

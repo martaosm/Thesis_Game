@@ -92,7 +92,9 @@ namespace NPC
             PlayerMovement.OnKleptoDeath -= AfterDeath;
         }
     
-        //npc is in attack mode and hits player
+        /**
+         * npc is in attack mode and hits player
+         */
         private void FireAttack()
         {
             if (!_isDead)
@@ -106,13 +108,17 @@ namespace NPC
             }
         }
         
-        //sets animation to "Walk"
+        /**
+         * sets animation to "Walk"
+         */
         private void IdleState()
         {
             _animator.SetBool(Attack, false);
         }
 
-        //sets animation to "Walk"
+        /**
+         * sets animation to "Walk"
+         */
         private void BackToCenter()
         {
             _animator.SetBool(Attack, false);
@@ -122,7 +128,9 @@ namespace NPC
             transform.position = position;
         }
 
-        //when player defeats npc, this method turns it into key
+        /**
+         * when player defeats npc, this method turns it into key
+         */
         private void AfterDeath()
         {
             gameObject.tag = "Key";
@@ -132,14 +140,18 @@ namespace NPC
             StartCoroutine(ChangeSprite());
         }
 
-        //changes npc into a key sprite
+        /**
+         * changes npc into a key sprite
+         */
         private IEnumerator ChangeSprite()
         {
             yield return new WaitForSeconds(1f);
             _animator.Play("KeyAnimationKlepto");
         }
 
-        //when npc hits player, npc bounces off of player with force
+        /**
+         * when npc hits player, npc bounces off of player with force
+         */
         private void OnCollisionEnter2D(Collision2D col)
         {
             if (col.gameObject.GetComponent<PlayerInfo>())

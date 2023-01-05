@@ -33,13 +33,17 @@ namespace Scene
             }
         }
     
-        //checks if player is in range 
+        /**
+         * checks if player is in range 
+         */
         private bool IsBeingAttacked()
         {
             return Physics2D.OverlapBox(playerCheckPoint.position, playerCheckSize, 0, playerLayer);
         }
         
-        //deactivates door and blackout that are covering hidden chamber
+        /**
+         * deactivates door and blackout that are covering hidden chamber
+         */
         private IEnumerator DoorDestroy()
         {
             yield return new WaitForSeconds(1f);

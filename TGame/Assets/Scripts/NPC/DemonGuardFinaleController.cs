@@ -40,11 +40,13 @@ namespace NPC
             }
         }
 
+        /**
+         * when player gives input, key is transferred to player
+         */
         private void OnTriggerStay2D(Collider2D other)
         {
             if (other.TryGetComponent(out PlayerInfo playerInfo))
             {
-                //when player gives input key is transferred to player a
                 if (Input.GetKey(KeyCode.E))
                 {
                     playerInfo.HasKey = true;

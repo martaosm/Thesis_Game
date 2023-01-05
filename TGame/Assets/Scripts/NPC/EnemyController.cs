@@ -98,14 +98,18 @@ namespace NPC
             }
         }
 
-        //method sets collider as trigger and turns off hitBox
+        /**
+         * method sets collider as trigger and turns off hitBox
+         */
         private void PlayerHasMark()
         {
             _collider2D.isTrigger = true;
             hitBox.SetActive(false);
         }
         
-        //after defeat skeleton is turned into heart that player can gain life from
+        /**
+         * after defeat skeleton is turned into heart that player can gain life from
+         */
         public IEnumerator DeadBodyDestroy()
         {
             _isDefeated = true;

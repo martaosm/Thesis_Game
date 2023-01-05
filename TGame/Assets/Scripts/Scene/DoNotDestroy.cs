@@ -7,7 +7,9 @@ namespace Scene
      */
     public class DoNotDestroy : MonoBehaviour
     {
-        //music plays smoothly during whole game, when track ends it starts to play again
+        /**
+         * music plays smoothly during whole game, when track ends it starts to play again
+         */
         private void Awake()
         {
             var musicObj = GameObject.FindGameObjectsWithTag("GameMusic");

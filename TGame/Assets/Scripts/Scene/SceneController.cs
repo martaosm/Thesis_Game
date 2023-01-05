@@ -49,9 +49,11 @@ namespace Scene
             }
         }
 
+        /**
+         * when player enters trigger camera stops moving along with the player and coroutine starts
+         */
         private void OnTriggerEnter2D(Collider2D col)
         {
-            //when player enters trigger camera stops moving along with the player and coroutine starts
             if (col.gameObject.GetComponent<PlayerInfo>())
             {
                 player.GetComponent<PlayerInfo>().InputEnabled = false;
@@ -70,7 +72,9 @@ namespace Scene
             }
         }
 
-        //depending on direction in which player runs, scene changes to the next or previous one
+        /**
+         * depending on direction in which player runs, scene changes to the next or previous one
+         */
         private IEnumerator MoveToNextChamber()
         {
             yield return new WaitForSeconds(3f);
@@ -86,14 +90,18 @@ namespace Scene
             }
         }
 
-        //after pressing resume button game continues
+        /*
+         * after pressing resume button game continues
+         */
         private void ResumeGame()
         {
             pauseCanvas.SetActive(false);
             Time.timeScale = 1;
         }
 
-        //after pressing start over button game is reloaded
+        /**
+         * after pressing start over button game is reloaded
+         */
         private void StarOver()
         {
             pauseCanvas.SetActive(false);
@@ -101,7 +109,9 @@ namespace Scene
             SceneManager.LoadScene("MenuScene");
         }
 
-        //after pressing quit button game is turned off
+        /**
+         * after pressing quit button game is turned off
+         */
         private void QuitGame()
         {
             pauseCanvas.SetActive(false);

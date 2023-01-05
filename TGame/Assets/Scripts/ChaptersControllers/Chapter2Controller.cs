@@ -13,21 +13,26 @@ namespace ChaptersControllers
         [SerializeField] private GameObject mark;
         [SerializeField] private GameObject demonGuard;
         [SerializeField] private GameObject key;
+        
+        /**
+         * method checking:
+         * - if player has the key in their possession or lost it, then key in the scene is not active
+         * - if player set prisoner free then they meet guard Npc in this scene
+         * - if player find mark object then skeletons are not attacking the player and chamber in which mark was found is left open
+         * - if condition is met, then key position is generated in this scene
+         */
         private void OnEnable()
         {
-            //if player has the key in their possession or lost it, then key in the scene is not active
             if (PlayerPrefs.GetInt("hasKey") == 0 && PlayerPrefs.GetInt("IsFree") == 1 || PlayerPrefs.GetInt("hasKey") == 1 && PlayerPrefs.GetInt("IsFree") == 0)
             {
                 key.SetActive(false);
             }
             
-            //if player set prisoner free then they meet guard Npc in this scene
             if (PlayerPrefs.GetInt("IsFree") == 1 && PlayerPrefs.GetInt("DemonGuardDone") == 0)
             {
                 demonGuard.SetActive(true);
             }
             
-            //if player find mark object then skeletons are not attacking the player and chamber in which mark was found is left open
             if (PlayerPrefs.GetInt("hasMark") == 1)
             {
                 mark.SetActive(false);
@@ -39,7 +44,6 @@ namespace ChaptersControllers
                 }
             }
             
-            //if condition is met, then key position is generated in this scene
             if (PlayerPrefs.GetInt("keyPosition") == 1 
                 && PlayerPrefs.GetInt("hasKey") == 0
                 && !(PlayerPrefs.GetInt("hasKey") == 0 

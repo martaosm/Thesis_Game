@@ -13,26 +13,34 @@ namespace ChaptersControllers
         [SerializeField] private Button quitButton;
 
         
-        //adding listeners to buttons
+        /**
+         * adding listeners to buttons
+         */
         private void OnEnable()
         {
             playAgainButton.onClick.AddListener(PlayAgain);
             quitButton.onClick.AddListener(QuitGame);
         }
 
-        //if button clicked then game is reloaded
+        /**
+         * if button clicked then game is reloaded
+         */
         private void PlayAgain()
         {
             SceneManager.LoadScene("MenuScene");
         }
     
-        //if button clicked the player quits game
+        /**
+         * if button clicked the player quits game
+         */
         private void QuitGame()
         {
             Application.Quit();
         }
 
-        //removing all listeners 
+        /**
+         * removing all listeners 
+         */
         private void OnDisable()
         {
             playAgainButton.onClick.RemoveAllListeners();

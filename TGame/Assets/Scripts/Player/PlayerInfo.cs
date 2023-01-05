@@ -30,7 +30,9 @@ namespace Player
             set => _health = value;
         }
         
-        //if player can move or not
+        /**
+         * variable determines if player can move or not
+         */
         public bool InputEnabled
         {
             get => _inputEnabled;
@@ -38,21 +40,27 @@ namespace Player
 
         }
         
-        //tells if player is in possession of a key
+        /**
+         * method returns true if player is in possession of a key
+         */
         public bool HasKey
         {
             get => _hasKey;
             set => _hasKey = value;
         }
 
-        //tells if player is in possession of a mark
+        /**
+         * method returns true if player is in possession of a mark
+         */
         public bool HasMark
         {
             get => _hasMark;
             set => _hasMark = value;
         }
 
-        //tells if player is attacking
+        /**
+         * method returns true if player is attacking
+         */
         public bool IsAttacking
         {
             get => _isAttacking;

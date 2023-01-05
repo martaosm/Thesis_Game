@@ -11,7 +11,9 @@ namespace Menu
     {
         [SerializeField] private List<GameObject> fireAnimation;
 
-        //Detect if the Cursor starts to pass over the GameObject and displays two fire animations
+        /**
+         * Detect if the Cursor starts to pass over the GameObject and displays two fire animations
+         */
         public void OnPointerEnter(PointerEventData pointerEventData)
         {
             foreach (var fire in fireAnimation)
@@ -20,7 +22,9 @@ namespace Menu
             }
         }
 
-        //Detect when Cursor leaves the GameObject
+        /**
+         * Detect when Cursor leaves the GameObject
+         */
         public void OnPointerExit(PointerEventData pointerEventData)
         {
             foreach (var fire in fireAnimation)

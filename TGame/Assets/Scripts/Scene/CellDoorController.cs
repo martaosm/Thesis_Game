@@ -69,7 +69,9 @@ namespace Scene
             }
         }
 
-        //method controls what comes after letting npc free, displays info about key loss and disables cell collider
+        /**
+         * method controls what comes after letting npc free, displays info about key loss and disables cell collider
+         */
         private IEnumerator InfoAfterFireAttack()
         {
             instructionText.text = "You lost a key!";

@@ -54,7 +54,9 @@ namespace NPC
             
         }
         
-        //method controls interaction with player, dialog options depends on how many times player approaches npc
+        /**
+         * method controls interaction with player, dialog options depends on how many times player approaches npc
+         */
         public void ConvoController()
         {
             switch (_playerInfo.HasKey)

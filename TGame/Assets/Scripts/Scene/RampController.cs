@@ -10,9 +10,12 @@ namespace Scene
     {
         [SerializeField] private GameObject point1;
         [SerializeField] private GameObject point2;
+        
+        /*
+         * if player is on the ramp, they become child of the ramp object and ramp starts moving up to certain point
+         */
         private void OnCollisionStay2D(Collision2D collision)
         {
-            //if player is on the ramp, they become child of the ramp object and ramp starts moving up to certain point
             if (collision.gameObject.GetComponent<PlayerInfo>())
             {
                 collision.gameObject.transform.SetParent(transform);
@@ -20,16 +23,20 @@ namespace Scene
             }
         }
 
+        /**
+         * if player is on the ramp, they become child of the ramp object and ramp starts moving up to certain point
+         */
         private void OnCollisionExit2D(Collision2D other)
         {
-            //when player walk off the ramp, they stop being ramp child
             if (other.gameObject.GetComponent<PlayerInfo>())
             {
                 other.gameObject.transform.SetParent(null);
             }
         }
 
-        //when player is in trigger area, the ramp starts moving down to certain point
+        /*
+         * when player is in trigger area, the ramp starts moving down to certain point
+         */
         private void OnTriggerStay2D(Collider2D col)
         {
             if (col.gameObject.GetComponent<PlayerInfo>())

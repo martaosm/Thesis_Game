@@ -20,7 +20,7 @@ namespace Scene
 
         private void Start()
         {
-            //if the door was opened then when player comes back to it from different scene door is still open
+            //if the door was opened,then when player comes back to it from different scene door is still open
             _animator = GetComponent<Animator>();
             if (_doorOpened)
             {
@@ -28,9 +28,11 @@ namespace Scene
             }
         }
 
+        /**
+         * instruction text is activated when player approaches door
+         */
         private void OnTriggerEnter2D(Collider2D col)
         {
-            //instruction text is activated when player approaches door
             if (col.TryGetComponent(out PlayerInfo playerInfo))
             {
                 instructionsText.gameObject.SetActive(true);
@@ -71,9 +73,11 @@ namespace Scene
             }
         }
 
+        /**
+         * if player walks away from door instruction text is deactivated
+         */
         private void OnTriggerExit2D(Collider2D other)
         {
-            //if player walks away from door instruction text is deactivated
             if (other.TryGetComponent(out PlayerInfo playerInfo))
             {
                 switch (playerInfo.HasKey)

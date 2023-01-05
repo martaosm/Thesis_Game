@@ -123,7 +123,9 @@ namespace NPC
             }
         }
 
-        //dialog controller after giving an answer, later dialog depends on player's answer
+        /**
+         * dialog controller after giving an answer, later dialog depends on player's answer
+         */
         private IEnumerator ConversationAfterAnswer()
         {
             instructions.gameObject.SetActive(false);
@@ -133,7 +135,9 @@ namespace NPC
             panel.SetActive(false);
         }
 
-        //after player defeats npc, npc leaves 
+        /**
+         * after player defeats npc, npc leaves 
+         */
         private IEnumerator ConversationAfterDefeat()
         {
             panel.SetActive(true);
@@ -195,7 +199,9 @@ namespace NPC
             }
         }
 
-        //interaction controller, dialog depends on how many times player approaches the npc
+        /**
+         * interaction controller, dialog depends on how many times player approaches the npc
+         */
         private void ConversationController()
         {
             if (_guardEncountersCount == 1)

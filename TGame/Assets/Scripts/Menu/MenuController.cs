@@ -16,7 +16,9 @@ namespace Menu
         [SerializeField] private Button quitButton;
         [SerializeField] private Button backButton;
         
-        //adds listeners to all buttons
+        /**
+         * adds listeners to all buttons
+         */
         private void OnEnable()
         {
             startButton.onClick.AddListener(LoadScene);
@@ -25,7 +27,9 @@ namespace Menu
             backButton.onClick.AddListener(BackToStart);
         }
 
-        //when scene is loaded all player prefs are set to default value
+        /**
+         * when scene is loaded all player prefs are set to default value
+         */
         private void LoadScene()
         {
             SceneManager.LoadScene("Prologue"); //scene load
@@ -42,26 +46,34 @@ namespace Menu
             GenerateKeyPosition();
         }
 
-        //generates in which scene key will appear
+        /**
+         * generates in which scene key will appear
+         */
         private void GenerateKeyPosition()
         {
             var random = new Random();
             PlayerPrefs.SetInt("keyPosition", random.Next(3));
         }
         
-        //activates panel with control instructions displayed
+        /**
+         * activates panel with control instructions displayed
+         */
         private void ShowControls()
         {
             controlsPanel.SetActive(true);
         }
 
-        //application quit
+        /**
+         * application quit
+         */
         private void QuitGame()
         {
             Application.Quit();
         }
 
-        //turns off control instruction panel
+        /**
+         * turns off control instruction panel
+         */
         private void BackToStart()
         {
             controlsPanel.SetActive(false);

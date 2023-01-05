@@ -15,7 +15,9 @@ namespace Scene
         public delegate void BackToCenter();
         public static event BackToCenter OnBackToCenter;
 
-        //depending on height on which is player, two events are invoked, OnAttack - nps starts attacking player, OnIdle - npc still follows a player but in idle state
+        /**
+         * depending on height on which is player, two events are invoked, OnAttack - nps starts attacking player, OnIdle - npc still follows a player but in idle state
+         */
         private void OnTriggerStay2D(Collider2D other)
         {
             if (other.GetComponent<PlayerInfo>() && other.transform.position.y>=9.338f && other.transform.position.y<=9.34f)
@@ -29,7 +31,9 @@ namespace Scene
             }
         }
 
-        //when player exits trigger area, npc stops attacking 
+        /**
+         * when player exits trigger area, npc stops attacking 
+         */
         private void OnTriggerExit2D(Collider2D other)
         {
             if (other.GetComponent<PlayerInfo>())
